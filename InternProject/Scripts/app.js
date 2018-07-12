@@ -20,7 +20,7 @@ piWebApiApp.controller("mainCtrl", function ($scope, piWebApiHttpService) {
   
     //update values when the default button is pressed  
     $scope.defaultValues = function () {  
-        $scope.piServerName = "MARC-PI2014";  
+        $scope.piServerName = "OAKPIAF";  
         $scope.piPointName = "SINUSOID";  
         $scope.startTime = "*-1d";  
         $scope.endTime = "*";  
@@ -28,11 +28,15 @@ piWebApiApp.controller("mainCtrl", function ($scope, piWebApiHttpService) {
         $scope.getSnap = $scope.yesOrNoOptions[0];  
         $scope.getRec = $scope.yesOrNoOptions[0];  
         $scope.getInt = $scope.yesOrNoOptions[0];  
+
+        $scope.path = "OAKPIAF\\Facilities-1600 Alvarado";
+        $scope.webId = "F1EmnqdqScCm70aDbETKiwGLjwRMdAri4l5xGJN3xc-DlStAT0FLUElBRlxGQUNJTElUSUVTLTE2MDAgQUxWQVJBRE9cU0xUQw";
     }  
   
   
     //get data by making http calls  
     $scope.getData = function () {  
+        console.log("getting data")
         //switch div to display the results  
         $scope.requestMode = false;  
         //all HTTP requests are done through the  piWebApiHttpService factory object  
@@ -46,36 +50,53 @@ piWebApiApp.controller("mainCtrl", function ($scope, piWebApiHttpService) {
             $scope.piServerExistsValue = false;  
         });  
   
+        piWebApiHttpService.getByPath($scope.path).then(function(response){
+            $scope.validPath = response.data;
+            console.log("get by path:")
+            console.log(response)
+        }, function (error) {
+            $scope.validPath = false;
+        });
+
+          
+        piWebApiHttpService.getByWebId($scope.webId).then(function(response){
+            $scope.webId = response.data;
+            console.log("get by webid:")
+            console.log(response)
+        }, function (error) {
+            $scope.webId = false;
+        });
+
+        // piWebApiHttpService.validPIPointName($scope.piServerName, $scope.piPointName).then(function (response) {  
+        //     $scope.piPointData = response.data;  
+        //     $scope.piPointExistsValue = true;  
+        //     //in case of success, we will get the webId of the PI Point which will be used by other requests  
+        //     $scope.webId = response.data.WebId;  
+        //     piWebApiHttpService.getSnapshotValue($scope.webId).then(function (response) {  
+        //         //Response of the snapshot is stored on the snapshotData  
+        //         $scope.snapshotData = response.data;  
+        //     }, function (error) {  
+        //         $scope.snapshotError = error.data;  
   
-        piWebApiHttpService.validPIPointName($scope.piServerName, $scope.piPointName).then(function (response) {  
-            $scope.piPointData = response.data;  
-            $scope.piPointExistsValue = true;  
-            //in case of success, we will get the webId of the PI Point which will be used by other requests  
-            $scope.webId = response.data.WebId;  
-            piWebApiHttpService.getSnapshotValue($scope.webId).then(function (response) {  
-                //Response of the snapshot is stored on the snapshotData  
-                $scope.snapshotData = response.data;  
-            }, function (error) {  
-                $scope.snapshotError = error.data;  
+  
+        //     }); 
+         
+        //     //The following requests use the webId already stored  
+        //     piWebApiHttpService.getRecordedValues($scope.webId, $scope.startTime, $scope.endTime).then(function (response) {  
+        //         $scope.recordedData = response.data;  
+        //     }, function (error) {  
+        //         $scope.recordedError = error.data;  
+        //     });  
   
   
-            });  
-            //The following requests use the webId already stored  
-            piWebApiHttpService.getRecordedValues($scope.webId, $scope.startTime, $scope.endTime).then(function (response) {  
-                $scope.recordedData = response.data;  
-            }, function (error) {  
-                $scope.recordedError = error.data;  
-            });  
-  
-  
-            piWebApiHttpService.getInterpolatedValues($scope.webId, $scope.startTime, $scope.endTime, $scope.interval).then(function (response) {  
-                $scope.interpolatedData = response.data;  
-            }, function (error) {  
-                $scope.interpolatedError = error.data;  
-            });  
-        }, function (error) {  
-            $scope.piPointError = error.data;  
-            $scope.piPointExistsValue = false;  
-        });  
+        //     piWebApiHttpService.getInterpolatedValues($scope.webId, $scope.startTime, $scope.endTime, $scope.interval).then(function (response) {  
+        //         $scope.interpolatedData = response.data;  
+        //     }, function (error) {  
+        //         $scope.interpolatedError = error.data;  
+        //     });  
+        // }, function (error) {  
+        //     $scope.piPointError = error.data;  
+        //     $scope.piPointExistsValue = false;  
+        // });  
     }  
 });  

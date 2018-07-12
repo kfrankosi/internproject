@@ -1,48 +1,61 @@
-'use strict'  
-piWebApiApp.factory('piWebApiHttpService', ['$http', '$q', function ($http, $q) {  
-  
-  
+'use strict'
+piWebApiApp.factory('piWebApiHttpService', ['$http', '$q', function ($http, $q) {
+
+
     //This factory method works like a service in which all HTTP requests are made.  
-    var serviceBase = 'https://oakpicoresight.osisoft.int:8443/piwebapi';  
-  
-  
+    var serviceBase = 'https://oakpicoresight.osisoft.int:8443/piwebapi/';
+
+
     //Set withCredentials = true; if you need to type your credentais.  
-    $http.defaults.withCredentials = true;  
-    var piWebApiHttpServiceFactory = {};  
-    piWebApiHttpServiceFactory.validPIServerName = function (piServerName) {  
-        return $http.get(serviceBase + "dataservers?name=" + piServerName).then(function (response) {  
-            return response;  
-        });  
-    };  
-  
-  
-    piWebApiHttpServiceFactory.validPIPointName = function (piServerName, piPointName) {  
-        return $http.get(serviceBase + "points?path=\\\\" + piServerName + "\\" + piPointName).then(function (response) {  
-            return response;  
-        });  
-    };  
-  
-  
-    piWebApiHttpServiceFactory.getSnapshotValue = function (webId) {  
-        return $http.get(serviceBase + 'streams/' + webId + '/value').then(function (response) {  
-            return response;  
-        });  
-    };  
-  
-  
-    piWebApiHttpServiceFactory.getRecordedValues = function (webId, startTime, endTime) {  
-        return $http.get(serviceBase + 'streams/' + webId + '/recorded?starttime=' + startTime + '&endtime=' + endTime).then(function (response) {  
-            return response;  
-        });  
-    };  
-  
-  
-    piWebApiHttpServiceFactory.getInterpolatedValues = function (webId, startTime, endTime, interval) {  
-        return $http.get(serviceBase + 'streams/' + webId + '/interpolated?starttime=' + startTime + '&endtime=' + endTime + "&interval=" + interval).then(function (response) {  
-            return response;  
-        });  
-    };  
-  
-  
-    return piWebApiHttpServiceFactory;  
+    $http.defaults.withCredentials = true;
+    var piWebApiHttpServiceFactory = {};
+    piWebApiHttpServiceFactory.validPIServerName = function (piServerName) {
+        return $http.get(serviceBase + "assetservers?name=" + piServerName).then(function (response) {
+            return response;
+        });
+    };
+
+    piWebApiHttpServiceFactory.getByPath = function (path) {
+        return $http.get(serviceBase + "points?path=\\\\" + path).then(function (response) {
+            //  OAKPIAF\\Facilities-1600 Alvarado
+            return response;
+        })
+    };
+
+    piWebApiHttpServiceFactory.getByWebId = function (webId){
+        return $http.get(serviceBase + "elements/" + webId).then(function (response){
+            return response;
+        })
+    };
+
+
+    // piWebApiHttpServiceFactory.validPIPointName = function (piServerName, piPointName) {  
+    //     return $http.get(serviceBase + "points?path=\\\\" + piServerName + "\\" + piPointName).then(function (response) {  
+    //         return response;  
+    //     });  
+    // };  
+
+
+    // piWebApiHttpServiceFactory.getSnapshotValue = function (webId) {  
+    //     return $http.get(serviceBase + 'streams/' + webId + '/value').then(function (response) {  
+    //         return response;  
+    //     });  
+    // };  
+
+
+    // piWebApiHttpServiceFactory.getRecordedValues = function (webId, startTime, endTime) {  
+    //     return $http.get(serviceBase + 'streams/' + webId + '/recorded?starttime=' + startTime + '&endtime=' + endTime).then(function (response) {  
+    //         return response;  
+    //     });  
+    // };  
+
+
+    // piWebApiHttpServiceFactory.getInterpolatedValues = function (webId, startTime, endTime, interval) {  
+    //     return $http.get(serviceBase + 'streams/' + webId + '/interpolated?starttime=' + startTime + '&endtime=' + endTime + "&interval=" + interval).then(function (response) {  
+    //         return response;  
+    //     });  
+    // };  
+
+
+    return piWebApiHttpServiceFactory;
 }]); 

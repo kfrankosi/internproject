@@ -1,0 +1,23 @@
+/* Forms */
+label {
+    display: block;
+    float: left;
+    clear: both;
+    text-align: right;
+    margin: 0.6em 5px 0 0;
+    width: 40%;
+}
+input, select, textarea {
+    float: right;
+    margin: 1em 0 0 0;
+    width: 57%;
+}
+
+input {
+    border: 1px solid #666;
+}
+
+input[type=radio], input[type=checkbox], input[type=submit],
+input[type=reset], input[type=button], input[type=image] {
+    width: auto;
+}

@@ -25,17 +25,23 @@
                 <label for="piServerName">PI Server Name *</label>
                 <!--The value of the input below is bound to the value of the $scope.piServerName.-->
                 <input type="text" name="piServerName" id="piServerName" value="" ng-model="piServerName" />
-                <label for="piPointName">PI Point name *</label>
-                <input type="text" name="piPointName" id="piPointName" value="" ng-model="piPointName" />
+                <!-- <label for="piPointName">PI Point name *</label> -->
+                <!-- <input type="text" name="piPointName" id="piPointName" value="" ng-model="piPointName" /> -->
                 <label for="startTime">Start time *</label>
                 <input type="text" name="startTime" id="startTime" value="" ng-model="startTime" />
                 <label for="endTime">End time *</label>
                 <input type="text" name="endTime" id="endTime" value="" ng-model="endTime" />
                 <label for="interval">Interval *</label>
                 <input type="text" name="interval" id="interval" value="" ng-model="interval" />
+                
+                
+                <label for="path">Path *</label>
+                <input type="text" name="path" id="path" value="" ng-model="path" />
 
+                <label for="path">WebId *</label>
+                <input type="text" name="webId" id="webId" value="" ng-model="webId" />
 
-                <label for="getsnap">Get Snapshot?</label>
+                <!-- <label for="getsnap">Get Snapshot?</label>
                 <select name="getsnap" id="getsnap" size="1" ng-model="getSnap" ng-options="option.name for option in yesOrNoOptions"> </select>
 
                 <label for="getrec">Get Recorded Data?</label>
@@ -43,7 +49,7 @@
 
 
                 <label for="getint">Get Interpolated Data?</label>
-                <select name="getint" id="getint" size="1" ng-model="getInt" ng-options="option.name for option in yesOrNoOptions"> </select>
+                <select name="getint" id="getint" size="1" ng-model="getInt" ng-options="option.name for option in yesOrNoOptions"> </select> -->
 
 
                 <div style="clear: both;">
@@ -96,10 +102,15 @@
                 <td>Does the PI Server exist?</td>
                 <td id="PIServerExistValue">{{piServerExistsValue}}</td>
             </tr>
+
             <tr>
+                <td>Valid Path?</td>
+                <td id="ValidPath">{{validPath}}</td>
+            </tr>
+            <!-- <tr>
                 <td>Does the PI Point exist?</td>
                 <td id="PIPointExistValue">{{piPointExistsValue}}</td>
-            </tr>
+            </tr> -->
         </table>
 
 
