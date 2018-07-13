@@ -15,18 +15,10 @@
 <body ng-controller="mainCtrl">
 
     <!-- Div that has the map appearing -->
-    <div ng-show="showMap == true" id="map"></div>
-    <script>
-        var map;
-        function initMap() {
-            map = new google.maps.Map(document.getElementById('map'), {
-                center: { lat: -34.397, lng: 150.644 },
-                zoom: 8
-            });
-        }
-    </script>
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD3tl-i_Mg8Z7uEIT82ElNO7vT1mbTx6hI&callback=initMap" async
-        defer></script>
+    <div ng-show="showMap == true" id="map">
+        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD3tl-i_Mg8Z7uEIT82ElNO7vT1mbTx6hI&callback=initMap&callback=renderMap" async
+            defer></script>
+    </div>
 
     <!--The div below will appear only if $scope.requestMode == true-->
     <!-- Set to == true to see boxes from initial web app -->

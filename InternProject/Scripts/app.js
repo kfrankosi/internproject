@@ -2,7 +2,7 @@
 
 
 var piWebApiApp = angular.module("PiWebApiSampleApp", []);
-
+var googleAPIKey = "AIzaSyD3tl-i_Mg8Z7uEIT82ElNO7vT1mbTx6hI";
 
 piWebApiApp.controller("mainCtrl", function ($scope, piWebApiHttpService) {
 
@@ -33,22 +33,7 @@ piWebApiApp.controller("mainCtrl", function ($scope, piWebApiHttpService) {
         $scope.webId = "F1EmnqdqScCm70aDbETKiwGLjwRMdAri4l5xGJN3xc-DlStAT0FLUElBRlxGQUNJTElUSUVTLTE2MDAgQUxWQVJBRE9cU0xUQw";
     }
 
-    $scope.renderMap = function () {
-        var xhr = new XMLHttpRequest;
-        xhr.open('GET', "https://maps.googleapis.com/maps/api/js?key=AIzaSyD3tl-i_Mg8Z7uEIT82ElNO7vT1mbTx6hI");
-        // .then(function (data) {
-        map = new google.maps.Map(document.getElementById('map'), {
-            center: { lat: -34.397, lng: 150.644 },
-            zoom: 8
-        });
-        $scope.show = false;
 
-        console.log("map");
-        console.log(document.getElementById('map'));
-        $scope.initTest = true;
-
-        // return map;
-    }
 
     //get data by making http calls  
     $scope.getData = function () {
@@ -120,3 +105,42 @@ piWebApiApp.controller("mainCtrl", function ($scope, piWebApiHttpService) {
         // });  
     }
 });
+
+var map;
+function initMap() {
+    map = new google.maps.Map(document.getElementById('map'), {
+        center: { lat: -34.397, lng: 150.644 },
+        zoom: 8
+    });
+}
+
+function renderMap() {
+    map = new google.maps.Map(document.getElementById('map'), {
+        center: { lat: -34.397, lng: 150.644 },
+        zoom: 20
+    });
+    // var xhr = new XMLHttpRequest;
+    // //get location
+    // xhr.open('GET', 'https://maps.googleapis.com/maps/api/geocode/json?address=1600+Amphitheatre+Parkway,+Mountain+View,+CA&key=' + googleAPIKey);
+    // console.log(xhr);
+    var geocoder = new google.maps.Geocoder();
+    // TODO: fix hardcode
+    var address = "1600 Alvarado Street, San Leandro";
+    geocoder.geocode({ 'address': address }, function (results, status) {
+        if (status === 'OK') {
+            console.log(results[0]);
+            map.setCenter(results[0].geometry.location);
+            var marker = new google.maps.Marker({
+                map: map,
+                position: results[0].geometry.location
+            });
+        } else {
+            alert('Geocode was not successful for the following reason: ' + status);
+        }
+    });
+
+
+    // $scope.show = false;
+
+    // return map;
+}
