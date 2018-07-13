@@ -21,3 +21,14 @@ input[type=radio], input[type=checkbox], input[type=submit],
 input[type=reset], input[type=button], input[type=image] {
     width: auto;
 }
+
+#map{
+    width: 100%;
+    height: 100%;
+}
+
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}

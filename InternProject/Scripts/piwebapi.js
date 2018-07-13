@@ -1,4 +1,4 @@
-'use strict'
+// 'use strict'
 piWebApiApp.factory('piWebApiHttpService', ['$http', '$q', function ($http, $q) {
 
 
@@ -9,6 +9,7 @@ piWebApiApp.factory('piWebApiHttpService', ['$http', '$q', function ($http, $q) 
     //Set withCredentials = true; if you need to type your credentais.  
     $http.defaults.withCredentials = true;
     var piWebApiHttpServiceFactory = {};
+
     piWebApiHttpServiceFactory.validPIServerName = function (piServerName) {
         return $http.get(serviceBase + "assetservers?name=" + piServerName).then(function (response) {
             return response;
@@ -16,14 +17,27 @@ piWebApiApp.factory('piWebApiHttpService', ['$http', '$q', function ($http, $q) 
     };
 
     piWebApiHttpServiceFactory.getByPath = function (path) {
-        return $http.get(serviceBase + "points?path=\\\\" + path).then(function (response) {
-            //  OAKPIAF\\Facilities-1600 Alvarado
-            return response;
+        // return $http.get("https://oakpicoresight.osisoft.int:8443/piwebapi/assetservers/F1RSnqdqScCm70aDbETKiwGLjwT0FLUElBRg/assetdatabases").then(function (response) {
+        //     //  OAKPIAF\\Facilities-1600 Alvarado
+        //     return response;
+        // })
+        // ajax gives unauthorized error -- can work with this
+        return $.ajax({
+            type: 'GET',
+            url: serviceBase + "assetservers/F1RSnqdqScCm70aDbETKiwGLjwT0FLUElBRg/assetdatabases",
+            xhrFields: {
+                withCredentials: true
+            }
+        }).then(function (data) {
+            console.log("done")
         })
+        // .beforeSend(function(xhr){
+        //     xhr.setRequestHeader('')
+        // })
     };
 
-    piWebApiHttpServiceFactory.getByWebId = function (webId){
-        return $http.get(serviceBase + "elements/" + webId).then(function (response){
+    piWebApiHttpServiceFactory.getByWebId = function (webId) {
+        return $http.get(serviceBase + "elements/" + webId).then(function (response) {
             return response;
         })
     };
