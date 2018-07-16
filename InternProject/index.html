@@ -13,10 +13,12 @@
 <!--Variables declared within $scope will manipulate the DOM within the body node-->
 
 <body ng-controller="mainCtrl">
-
+    <div ng-show="showMap == true" id="overlay">
+        <img src="Floorplan.jpg">
+    </div>
     <!-- Div that has the map appearing -->
     <div ng-show="showMap == true" id="map">
-        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD3tl-i_Mg8Z7uEIT82ElNO7vT1mbTx6hI&callback=initMap&callback=renderMap" async
+        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD3tl-i_Mg8Z7uEIT82ElNO7vT1mbTx6hI&callback=initMap&callback=renderMap"
             defer></script>
     </div>
 

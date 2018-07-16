@@ -33,8 +33,6 @@ piWebApiApp.controller("mainCtrl", function ($scope, piWebApiHttpService) {
         $scope.webId = "F1EmnqdqScCm70aDbETKiwGLjwRMdAri4l5xGJN3xc-DlStAT0FLUElBRlxGQUNJTElUSUVTLTE2MDAgQUxWQVJBRE9cU0xUQw";
     }
 
-
-
     //get data by making http calls  
     $scope.getData = function () {
         console.log("getting data")
@@ -71,65 +69,36 @@ piWebApiApp.controller("mainCtrl", function ($scope, piWebApiHttpService) {
         });
 
 
-
-        // piWebApiHttpService.validPIPointName($scope.piServerName, $scope.piPointName).then(function (response) {  
-        //     $scope.piPointData = response.data;  
-        //     $scope.piPointExistsValue = true;  
-        //     //in case of success, we will get the webId of the PI Point which will be used by other requests  
-        //     $scope.webId = response.data.WebId;  
-        //     piWebApiHttpService.getSnapshotValue($scope.webId).then(function (response) {  
-        //         //Response of the snapshot is stored on the snapshotData  
-        //         $scope.snapshotData = response.data;  
-        //     }, function (error) {  
-        //         $scope.snapshotError = error.data;  
-
-
-        //     }); 
-
-        //     //The following requests use the webId already stored  
-        //     piWebApiHttpService.getRecordedValues($scope.webId, $scope.startTime, $scope.endTime).then(function (response) {  
-        //         $scope.recordedData = response.data;  
-        //     }, function (error) {  
-        //         $scope.recordedError = error.data;  
-        //     });  
-
-
-        //     piWebApiHttpService.getInterpolatedValues($scope.webId, $scope.startTime, $scope.endTime, $scope.interval).then(function (response) {  
-        //         $scope.interpolatedData = response.data;  
-        //     }, function (error) {  
-        //         $scope.interpolatedError = error.data;  
-        //     });  
-        // }, function (error) {  
-        //     $scope.piPointError = error.data;  
-        //     $scope.piPointExistsValue = false;  
-        // });  
     }
+
+    $scope
+
 });
 
 var map;
-function initMap() {
-    map = new google.maps.Map(document.getElementById('map'), {
-        center: { lat: -34.397, lng: 150.644 },
-        zoom: 8
-    });
-}
 
 function renderMap() {
+    var overlay;
     map = new google.maps.Map(document.getElementById('map'), {
-        center: { lat: -34.397, lng: 150.644 },
-        zoom: 20
+        // center: { lat: -34.397, lng: 150.644 },
+        zoom: 20,
+        mapTypeId: 'satellite',
+        heading: 0,
+        tilt: 0
     });
-    // var xhr = new XMLHttpRequest;
-    // //get location
-    // xhr.open('GET', 'https://maps.googleapis.com/maps/api/geocode/json?address=1600+Amphitheatre+Parkway,+Mountain+View,+CA&key=' + googleAPIKey);
-    // console.log(xhr);
+
+
     var geocoder = new google.maps.Geocoder();
-    // TODO: fix hardcode
+    // TODO: fix hardcode?
     var address = "1600 Alvarado Street, San Leandro";
+    var lat, lng, coords;
     geocoder.geocode({ 'address': address }, function (results, status) {
         if (status === 'OK') {
-            console.log(results[0]);
+            // console.log(results[0].geometry.location.lat());
+            lat = results[0].geometry.location.lat();
+            lng = results[0].geometry.location.lng();
             map.setCenter(results[0].geometry.location);
+            // Adds a red marker to building -- use markers for different areas/rooms instead
             // var marker = new google.maps.Marker({
             //     map: map,
             //     position: results[0].geometry.location
@@ -137,10 +106,31 @@ function renderMap() {
         } else {
             alert('Geocode was not successful for the following reason: ' + status);
         }
+
+        coords = latLng2Point(map.getCenter(), map);
+        console.log(coords); // coords.x, coords.y
+
+        document.getElementById("overlay").style.top = coords.y + (130 * scaleAdj) + "px";
+        document.getElementById("overlay").style.left = coords.x - (380 * scaleAdj) + "px";
+        document.getElementById("overlay").style.transform = "rotate(54deg) scale(" + scaleAdj + ")";
     });
+}
 
+var scaleAdj = .63;
 
-    // $scope.show = false;
+function latLng2Point(latLng, map) {
+    var topRight = map.getProjection().fromLatLngToPoint(map.getBounds().getNorthEast());
+    var bottomLeft = map.getProjection().fromLatLngToPoint(map.getBounds().getSouthWest());
+    var scale = Math.pow(2, map.getZoom());
+    scale *= scaleAdj;
+    var worldPoint = map.getProjection().fromLatLngToPoint(latLng);
+    return new google.maps.Point((worldPoint.x - bottomLeft.x) * scale, (worldPoint.y - topRight.y) * scale);
+}
 
-    // return map;
+function point2LatLng(point, map) {
+    var topRight = map.getProjection().fromLatLngToPoint(map.getBounds().getNorthEast());
+    var bottomLeft = map.getProjection().fromLatLngToPoint(map.getBounds().getSouthWest());
+    var scale = Math.pow(2, map.getZoom());
+    var worldPoint = new google.maps.Point(point.x / scale + bottomLeft.x, point.y / scale + topRight.y);
+    return map.getProjection().fromPointToLatLng(worldPoint);
 }
