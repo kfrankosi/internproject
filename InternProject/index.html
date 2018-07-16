@@ -20,10 +20,25 @@
         <input type="button" value="Toggle DOM attachment" onclick="overlay.toggleDOM();"></input>
     </div> -->
     <!-- </div> -->
+
+    <div class="dropdown">
+        <button class="dropbtn">Floor</button>
+        <div class="dropdown-content" id="floor-menu">
+            <!-- <a href="#">Link 1</a>
+            <a href="#">Link 2</a>
+            <a href="#">Link 3</a> -->
+            <a ng-click="floor(2)">Floor 2</a>
+            <a ng-click="floor(3)">Floor 3</a>
+            <a ng-click="floor(4)">Floor 4</a>
+            <a ng-click="floor(5)">Floor 5</a>
+            <a ng-click="floor(6)">Floor 6</a>
+        </div>
+    </div>
     <!-- Div that has the map appearing -->
+
     <div ng-show="showMap == true" id="map">
-        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD3tl-i_Mg8Z7uEIT82ElNO7vT1mbTx6hI&callback=initMap&callback=renderMap"
-            async defer ></script>
+        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD3tl-i_Mg8Z7uEIT82ElNO7vT1mbTx6hI&callback=renderMap" async
+            defer></script>
     </div>
 
     <!--The div below will appear only if $scope.requestMode == true-->
