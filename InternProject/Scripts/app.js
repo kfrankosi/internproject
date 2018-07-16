@@ -75,10 +75,12 @@ piWebApiApp.controller("mainCtrl", function ($scope, piWebApiHttpService) {
 
 });
 
-var map;
+var map, overlay, lat, lng;
+USGSOverlay.prototype;
 
 function renderMap() {
-    var overlay;
+    USGSOverlay.prototype = new google.maps.OverlayView();
+
     map = new google.maps.Map(document.getElementById('map'), {
         // center: { lat: -34.397, lng: 150.644 },
         zoom: 20,
@@ -91,7 +93,7 @@ function renderMap() {
     var geocoder = new google.maps.Geocoder();
     // TODO: fix hardcode?
     var address = "1600 Alvarado Street, San Leandro";
-    var lat, lng, coords;
+    // var coords;
     geocoder.geocode({ 'address': address }, function (results, status) {
         if (status === 'OK') {
             // console.log(results[0].geometry.location.lat());
@@ -107,14 +109,141 @@ function renderMap() {
             alert('Geocode was not successful for the following reason: ' + status);
         }
 
-        coords = latLng2Point(map.getCenter(), map);
-        console.log(coords); // coords.x, coords.y
+        // coords = latLng2Point(map.getCenter(), map);
+        // console.log(coords); // coords.x, coords.y
 
-        document.getElementById("overlay").style.top = coords.y + (130 * scaleAdj) + "px";
-        document.getElementById("overlay").style.left = coords.x - (380 * scaleAdj) + "px";
-        document.getElementById("overlay").style.transform = "rotate(54deg) scale(" + scaleAdj + ")";
+        // document.getElementById("overlay").style.top = coords.y + (130 * scaleAdj) + "px";
+        // document.getElementById("overlay").style.left = coords.x - (380 * scaleAdj) + "px";
+        // document.getElementById("overlay").style.transform = "rotate(54deg) scale(" + scaleAdj + ")";
     });
+
+
+    var bounds = new google.maps.LatLngBounds(
+        new google.maps.LatLng(lat - 0.1, lng - 0.1),
+        new google.maps.LatLng(lat + 0.1, lng + 0.1)
+    );
+
+    var srcImage = "Floorplan.jpg";
+
+    // overlay = new USGSOverlay(bounds, srcImage, map);
+    // google.maps.event.addDomListener(window, 'load', renderMap);
+
+
 }
+
+
+/** @constructor */
+function USGSOverlay(bounds, image, map) {
+    // Initialize all properties.
+    this.bounds_ = bounds;
+    this.image_ = image;
+    this.map_ = map;
+
+    // Define a property to hold the image's div. We'll
+    // actually create this div upon receipt of the onAdd()
+    // method so we'll leave it null for now.
+    this.div_ = null;
+
+    // Explicitly call setMap on this overlay.
+    this.setMap(map);
+    // return this;
+}
+
+/**
+* onAdd is called when the map's panes are ready and the overlay has been
+* added to the map.
+*/
+USGSOverlay.prototype.onAdd = function () {
+    console.log("onadd");
+    var div = document.createElement('div');
+    div.style.borderStyle = 'none';
+    div.style.borderWidth = '0px';
+    div.style.position = 'absolute';
+
+    // Create the img element and attach it to the div.
+    var img = document.createElement('img');
+    img.src = this.image_;
+    img.style.width = '100%';
+    img.style.height = '100%';
+    img.style.position = 'absolute';
+    div.appendChild(img);
+
+    this.div_ = div;
+
+    // Add the element to the "overlayLayer" pane.
+    var panes = this.getPanes();
+    panes.overlayLayer.appendChild(div);
+};
+
+USGSOverlay.prototype.draw = function () {
+
+    // We use the south-west and north-east
+    // coordinates of the overlay to peg it to the correct position and size.
+    // To do this, we need to retrieve the projection from the overlay.
+    var overlayProjection = this.getProjection();
+
+    // Retrieve the south-west and north-east coordinates of this overlay
+    // in LatLngs and convert them to pixel coordinates.
+    // We'll use these coordinates to resize the div.
+    var sw = overlayProjection.fromLatLngToDivPixel(this.bounds_.getSouthWest());
+    var ne = overlayProjection.fromLatLngToDivPixel(this.bounds_.getNorthEast());
+
+    // Resize the image's div to fit the indicated dimensions.
+    var div = this.div_;
+    div.style.left = sw.x + 'px';
+    div.style.top = ne.y + 'px';
+    div.style.width = (ne.x - sw.x) + 'px';
+    div.style.height = (sw.y - ne.y) + 'px';
+
+    div.style.visibility = 'visible';
+};
+
+// The onRemove() method will be called automatically from the API if
+// we ever set the overlay's map property to 'null'.
+USGSOverlay.prototype.onRemove = function () {
+    this.div_.parentNode.removeChild(this.div_);
+    this.div_ = null;
+};
+
+// Set the visibility to 'hidden' or 'visible'.
+USGSOverlay.prototype.hide = function () {
+    if (this.div_) {
+        // The visibility property must be a string enclosed in quotes.
+        this.div_.style.visibility = 'hidden';
+    }
+};
+
+USGSOverlay.prototype.show = function () {
+    if (this.div_) {
+        this.div_.style.visibility = 'visible';
+    }
+};
+
+USGSOverlay.prototype.toggle = function () {
+    if (this.div_) {
+        if (this.div_.style.visibility === 'hidden') {
+            this.show();
+        } else {
+            this.hide();
+        }
+    }
+};
+
+// Detach the map from the DOM via toggleDOM().
+// Note that if we later reattach the map, it will be visible again,
+// because the containing <div> is recreated in the overlay's onAdd() method.
+USGSOverlay.prototype.toggleDOM = function () {
+    if (this.getMap()) {
+        // Note: setMap(null) calls OverlayView.onRemove()
+        this.setMap(null);
+    } else {
+        this.setMap(this.map_);
+    }
+
+
+    //potentially after?
+};
+
 
 var scaleAdj = .63;
 
@@ -134,3 +263,5 @@ function point2LatLng(point, map) {
     var worldPoint = new google.maps.Point(point.x / scale + bottomLeft.x, point.y / scale + topRight.y);
     return map.getProjection().fromPointToLatLng(worldPoint);
 }
+
+
