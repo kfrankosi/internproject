@@ -13,6 +13,11 @@ piWebApiApp.controller("mainCtrl", function ($scope, piWebApiHttpService) {
     $scope.getRec = true;
     $scope.getInt = true;
     $scope.showMap = true;
+    $scope.displayMenu = true;
+
+    //USING VALS FOR TESTING
+    $scope.showMap = false;
+    $scope.onFloor = true;
 
     //options for the combobox on the initial page  
     $scope.yesOrNoOptions = [{ "value": true, "name": "Yes" }, { "value": false, "name": "No" }];
@@ -36,7 +41,14 @@ piWebApiApp.controller("mainCtrl", function ($scope, piWebApiHttpService) {
 
     $scope.floor = function (num) {
         console.log("floor " + num);
-        $scope.showMap = !$scope.showMap; // toggles map
+        $scope.showMap = false; // toggles map
+        $scope.onFloor = true; // only shows floor info if map is not showing
+        $scope.floorNumber = num;
+
+        var dropMenu = document.getElementsByClassName("dropdown")[0];
+        dropMenu.style.width = "5%";
+        dropMenu.style.paddingLeft = "95%";
+        dropMenu.style.paddingBottom = "80%";
     }
 
     //get data by making http calls  
@@ -143,4 +155,46 @@ function renderMap() {
     // $scope.show = false;
 
     // return map;
+}
+
+
+
+
+
+var $el = $("#very-specific-design");
+var allSquares = $document.getElementsByClassName("square");
+// for each(var $el in $document.getElementsByClassName("square")) {
+for (var i = 0; i < allSquares.length(); i++) {
+    $el = allSquares[i];
+    var elHeight = $el.outerHeight();
+    var elWidth = $el.outerWidth();
+
+    $square.resizable({
+        resize: doResize
+    });
+
+    function doResize(event, ui) {
+
+        var scale, origin;
+
+        scale = Math.min(
+            ui.size.width / elWidth,
+            ui.size.height / elHeight
+        );
+
+        $el.css({
+            transform: "translate(-50%, -50%) " + "scale(" + scale + ")"
+        });
+
+    }
+
+    var $square = $("#square");
+
+    var starterData = {
+        size: {
+            width: $square.width(),
+            height: $square.height()
+        }
+    }
+    doResize(null, starterData);
 }

@@ -21,7 +21,7 @@
     </div> -->
     <!-- </div> -->
 
-    <div class="dropdown">
+    <div class="dropdown" ng-show="displayMenu==false">
         <button class="dropbtn">Floor</button>
         <div class="dropdown-content" id="floor-menu">
             <!-- <a href="#">Link 1</a>
@@ -36,9 +36,28 @@
     </div>
     <!-- Div that has the map appearing -->
 
+    <div ng-show="onFloor==true" class="floor-info">
+        <!-- <div class="dropbtn">
+            <h1>
+                Floor {{floorNumber}}
+            </h1>
+        </div> -->
+        <!-- Insert floor layout -->
+        <div id="floorplan">
+            <img src="Floorplan.jpg">
+        </div>
+        <div id="floorplan_child">
+            <div id="square1" class="room square square_top"></div>
+            <div id="square2" class="room square square_top" content="width=device-width, initial-scale=1"></div>
+            <div id="square3" class="room square square_top" content="width=device-width, initial-scale=1"></div>
+            <div id="square4" class="room square square_top" content="width=device-width, initial-scale=1"></div>
+            <div id="square5" class="room square square_top" content="width=device-width, initial-scale=1"></div>
+            <div id="square6" class="room square square_top" content="width=device-width, initial-scale=1"></div>
+        </div>
+    </div>
+
     <div ng-show="showMap == true" id="map">
-        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD3tl-i_Mg8Z7uEIT82ElNO7vT1mbTx6hI&callback=renderMap" async
-            defer></script>
+        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD3tl-i_Mg8Z7uEIT82ElNO7vT1mbTx6hI&callback=renderMap" defer></script>
     </div>
 
     <!--The div below will appear only if $scope.requestMode == true-->
