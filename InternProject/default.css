@@ -116,7 +116,6 @@ img {
 .square {
     position: fixed;
     opacity: 0.2;
-    background-color: red;
 }
 
 .square_top {
@@ -138,23 +137,23 @@ img {
 #square1 {
     width: 12vw;
     left: 4vw;
-    background-color: orange;
+    /* background-color: orange; */
 }
 
 #square2 {
     width: 29vw;
     left: 16vw;
-    background-color: yellow;
+    /* background-color: yellow; */
 }
 
 #square4 {
-    background-color: green;
+    /* background-color: green; */
     left: 45vw;
     width: 10vw;
 }
 
 #square5 {
-    background-color: blue;
+    /* background-color: blue; */
     left: 55vw;
     width: 25vw;
 }

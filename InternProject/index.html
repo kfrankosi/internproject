@@ -12,7 +12,7 @@
 <!--The mainContrl is our main AngularJS controller-->
 <!--Variables declared within $scope will manipulate the DOM within the body node-->
 
-<body ng-controller="mainCtrl">
+<body ng-controller="mainCtrl" ng-click="getData()">
     <!-- <div ng-show="showMap == true" id="overlay"> -->
     <!-- <img src="Floorplan.jpg"> -->
     <!-- <div id="floating-panel" class="overlay">
@@ -95,7 +95,7 @@
 
 
                 <label for="path">Path *</label>
-                <input type="text" name="path" id="path" value="" ng-model="path" />
+                <input type="text" name="path" id="path" value="\\\\OAKPIAF\\Facilities-1600+Alvarado\\Devices\\VAVCO 2-01|Temp" ng-model="path" />
 
                 <label for="path">WebId *</label>
                 <input type="text" name="webId" id="webId" value="" ng-model="webId" />

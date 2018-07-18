@@ -57,34 +57,35 @@ piWebApiApp.controller("mainCtrl", function ($scope, piWebApiHttpService) {
         //switch div to display the results  
         $scope.requestMode = false;
         //all HTTP requests are done through the  piWebApiHttpService factory object  
-        piWebApiHttpService.validPIServerName($scope.piServerName).then(function (response) {
-            //this function will be executed in case of success  
-            $scope.piServerData = response.data;
-            $scope.piServerExistsValue = true;
-        }, function (error) {
-            //this function will be executed in case of error  
-            $scope.piServerError = error.data;
-            $scope.piServerExistsValue = false;
-        });
+        // piWebApiHttpService.validPIServerName($scope.piServerName).then(function (response) {
+        //     //this function will be executed in case of success  
+        //     $scope.piServerData = response.data;
+        //     $scope.piServerExistsValue = true;
+        // }, function (error) {
+        //     //this function will be executed in case of error  
+        //     $scope.piServerError = error.data;
+        //     $scope.piServerExistsValue = false;
+        // });
 
         piWebApiHttpService.getByPath($scope.path).then(function (response) {
-            $scope.validPath = response.data;
             console.log("get by path:")
             console.log(response)
+            $scope.validPath = response.data;
         }, function (error) {
             $scope.validPath = false;
         });
 
 
-        piWebApiHttpService.getByWebId($scope.webId).then(function (response) {
-            $scope.webId = response.data;
-            console.log("get by webid:")
-            console.log(response)
-        }, function (error) {
-            console.log("web id error");
-            console.log(error);
-            $scope.webId = false;
-        });
+        // piWebApiHttpService.getByWebId($scope.webId).then(function (response) {
+        //     $scope.webId = response.data;
+        //     console.log("get by webid:")
+        //     console.log(response)
+        // }, function (error) {
+        //     console.log("web id error");
+        //     console.log(error);
+        //     $scope.webId = false;
+        // });
+
 
 
 
@@ -125,6 +126,7 @@ piWebApiApp.controller("mainCtrl", function ($scope, piWebApiHttpService) {
 var map;
 
 function renderMap() {
+
     map = new google.maps.Map(document.getElementById('map'), {
         zoom: 20,
         mapTypeId: 'satellite',
@@ -155,46 +157,4 @@ function renderMap() {
     // $scope.show = false;
 
     // return map;
-}
-
-
-
-
-
-var $el = $("#very-specific-design");
-var allSquares = $document.getElementsByClassName("square");
-// for each(var $el in $document.getElementsByClassName("square")) {
-for (var i = 0; i < allSquares.length(); i++) {
-    $el = allSquares[i];
-    var elHeight = $el.outerHeight();
-    var elWidth = $el.outerWidth();
-
-    $square.resizable({
-        resize: doResize
-    });
-
-    function doResize(event, ui) {
-
-        var scale, origin;
-
-        scale = Math.min(
-            ui.size.width / elWidth,
-            ui.size.height / elHeight
-        );
-
-        $el.css({
-            transform: "translate(-50%, -50%) " + "scale(" + scale + ")"
-        });
-
-    }
-
-    var $square = $("#square");
-
-    var starterData = {
-        size: {
-            width: $square.width(),
-            height: $square.height()
-        }
-    }
-    doResize(null, starterData);
 }

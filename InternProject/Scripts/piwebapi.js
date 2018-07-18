@@ -5,6 +5,8 @@ piWebApiApp.factory('piWebApiHttpService', ['$http', '$q', function ($http, $q) 
     //This factory method works like a service in which all HTTP requests are made.  
     var serviceBase = 'https://oakpicoresight.osisoft.int:8443/piwebapi/';
 
+    var testBase = "https://pikfrank.osisoft.int/piwebapi/streamsets/F1EmZErvcQ4i_kaeZo0kfGe5aQnkdgc92K6BG3XgAd3LcnpQUElLRlJBTktcSU5URVJOUFJPSkVDVFxST09NU1xURVNUUk9PTTE/value"
+
 
     //Set withCredentials = true; if you need to type your credentais.  
     $http.defaults.withCredentials = true;
@@ -22,15 +24,10 @@ piWebApiApp.factory('piWebApiHttpService', ['$http', '$q', function ($http, $q) 
         //     return response;
         // })
         // ajax gives unauthorized error -- can work with this
-        return $.ajax({
-            type: 'GET',
-            url: serviceBase + "assetservers/F1RSnqdqScCm70aDbETKiwGLjwT0FLUElBRg/assetdatabases",
-            xhrFields: {
-                withCredentials: true
-            }
-        }).then(function (data) {
-            console.log("done")
-        })
+
+        return $http.get(testBase).then(function (response) {
+            return response;
+        });
         // .beforeSend(function(xhr){
         //     xhr.setRequestHeader('')
         // })
@@ -42,6 +39,12 @@ piWebApiApp.factory('piWebApiHttpService', ['$http', '$q', function ($http, $q) 
         })
     };
 
+    piWebApiHttpServiceFactory.getCurrentTemp = function () {
+        return $http.get(serviceBase + tempUrl).then(function (response) {
+            return response;
+            // "\\\\OAKPIAF\\Facilities-1600+Alvarado\\Devices\\VAVCO 2-01|Temp"
+        })
+    };
 
     // piWebApiHttpServiceFactory.validPIPointName = function (piServerName, piPointName) {  
     //     return $http.get(serviceBase + "points?path=\\\\" + piServerName + "\\" + piPointName).then(function (response) {  
