@@ -114,45 +114,47 @@ img {
 }
 
 .square {
-    width: 30vw;
-    height: 30vh;
     position: fixed;
+    opacity: 0.2;
     background-color: red;
 }
 
 .square_top {
-    opacity: 0.2;
-    top: 5vh;
-    height: 22vh;
-    /* top: 30px;
-    bottom: 550px;
-    left: 0;
-    right: 0;
-    width: 10%;
-    height: auto; */
+    top: 4vh;
+    height: 22.8vh;
+}
+
+.square_middle {
+    height: 26.8vh;
+    top: 27vh;
+    width: 2vw;
+}
+
+.square_bottom {
+    bottom: 23vh;
+    height: 23vh;
 }
 
 #square1 {
     width: 12vw;
     left: 4vw;
+    background-color: orange;
 }
 
 #square2 {
-    width: 24vw;
+    width: 29vw;
     left: 16vw;
-}
-
-#square3 {
-    left: 40vw;
-    width: 5vw;
+    background-color: yellow;
 }
 
 #square4 {
+    background-color: green;
     left: 45vw;
     width: 10vw;
 }
 
 #square5 {
+    background-color: blue;
     left: 55vw;
     width: 25vw;
 }
@@ -160,6 +162,16 @@ img {
 #square6 {
     left: 80vw;
     width: 12vw;
+}
+
+#square7 {
+    left: 4vw;
+    width: 12vw;
+}
+
+#square8 {
+    left: 16vw;
+    width: 25vw;
 }
 
 #floorplan_child {
