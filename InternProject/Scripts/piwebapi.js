@@ -7,6 +7,7 @@ piWebApiApp.factory('piWebApiHttpService', ['$http', '$q', function ($http, $q) 
 
     var testBase = "https://pikfrank.osisoft.int/piwebapi/streamsets/F1EmZErvcQ4i_kaeZo0kfGe5aQnkdgc92K6BG3XgAd3LcnpQUElLRlJBTktcSU5URVJOUFJPSkVDVFxST09NU1xURVNUUk9PTTE/value"
 
+    var base = "https://pikfrank.osisoft.int/piwebapi/";
 
     //Set withCredentials = true; if you need to type your credentais.  
     $http.defaults.withCredentials = true;
@@ -18,19 +19,13 @@ piWebApiApp.factory('piWebApiHttpService', ['$http', '$q', function ($http, $q) 
         });
     };
 
-    piWebApiHttpServiceFactory.getByPath = function (path) {
-        // return $http.get("https://oakpicoresight.osisoft.int:8443/piwebapi/assetservers/F1RSnqdqScCm70aDbETKiwGLjwT0FLUElBRg/assetdatabases").then(function (response) {
-        //     //  OAKPIAF\\Facilities-1600 Alvarado
-        //     return response;
-        // })
-        // ajax gives unauthorized error -- can work with this
 
-        return $http.get(testBase).then(function (response) {
+    piWebApiHttpServiceFactory.getByPath = function (path) {
+        path = base + "elements?path=" + path;
+        console.log(path);
+        return $http.get(path).then(function (response) {
             return response;
         });
-        // .beforeSend(function(xhr){
-        //     xhr.setRequestHeader('')
-        // })
     };
 
     piWebApiHttpServiceFactory.getByWebId = function (webId) {
@@ -45,6 +40,26 @@ piWebApiApp.factory('piWebApiHttpService', ['$http', '$q', function ($http, $q) 
             // "\\\\OAKPIAF\\Facilities-1600+Alvarado\\Devices\\VAVCO 2-01|Temp"
         })
     };
+
+    piWebApiHttpServiceFactory.postPoint = function (body) {
+        return $.ajax({
+            url: base + "streams/" + webID + "/" + body,
+            type: "POST",
+            headers: { 'Content-Type': 'application/json' },
+            data: JSON.stringify(body),
+            // dataType: "json",
+            success: function (result) {
+                console.log(result);
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                console.log(xhr.status);
+            }
+        });
+
+
+        // return $http.post(base + "streams/" + webID + "/" + body);
+
+    }
 
     // piWebApiHttpServiceFactory.validPIPointName = function (piServerName, piPointName) {  
     //     return $http.get(serviceBase + "points?path=\\\\" + piServerName + "\\" + piPointName).then(function (response) {  

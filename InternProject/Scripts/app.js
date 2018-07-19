@@ -67,14 +67,20 @@ piWebApiApp.controller("mainCtrl", function ($scope, piWebApiHttpService) {
         //     $scope.piServerExistsValue = false;
         // });
 
-        piWebApiHttpService.getByPath($scope.path).then(function (response) {
-            console.log("get by path:")
-            console.log(response)
+        piWebApiHttpService.getByPath("\\\\PIKFRANK\\internproject\\Rooms\\TestRoom1").then(function (response) {
+            console.log("get by path:");
+            console.log(response);
             $scope.validPath = response.data;
         }, function (error) {
             $scope.validPath = false;
         });
 
+        // this needs mad work -- watch video to learn --> https://pisquare.osisoft.com/videos/1577
+        piWebApiHttpService.postPoint(body).then(function (response) {
+            console.log(response);
+        }, function (error) {
+            console.log(error);
+        });
 
         // piWebApiHttpService.getByWebId($scope.webId).then(function (response) {
         //     $scope.webId = response.data;
