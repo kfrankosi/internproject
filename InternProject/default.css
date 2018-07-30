@@ -114,6 +114,7 @@ img {
 }
 
 .square {
+    background-color: red;
     position: fixed;
     opacity: 0.2;
 }

@@ -4,7 +4,7 @@
 var piWebApiApp = angular.module("PiWebApiSampleApp", []);
 var googleAPIKey = "AIzaSyD3tl-i_Mg8Z7uEIT82ElNO7vT1mbTx6hI";
 
-piWebApiApp.controller("mainCtrl", function ($scope, piWebApiHttpService) {
+piWebApiApp.controller("mainCtrl", ["$scope", function ($scope, piWebApiHttpService) {
 
 
     //declare and inicialize variables  
@@ -38,6 +38,13 @@ piWebApiApp.controller("mainCtrl", function ($scope, piWebApiHttpService) {
         $scope.webId = "F1EmnqdqScCm70aDbETKiwGLjwRMdAri4l5xGJN3xc-DlStAT0FLUElBRlxGQUNJTElUSUVTLTE2MDAgQUxWQVJBRE9cU0xUQw";
     }
 
+    // $scope.addPoint = function(){
+    //     console.log("adding new point");
+    //     // $.ajax({
+    //     //     type: "POST",
+    //     //     url: "/c/Users/kfrank/source/repos/InternProject/InternProject/landen_wrapper.py"
+    //     // })
+    // }
 
     $scope.floor = function (num) {
         console.log("floor " + num);
@@ -67,7 +74,7 @@ piWebApiApp.controller("mainCtrl", function ($scope, piWebApiHttpService) {
         //     $scope.piServerExistsValue = false;
         // });
 
-        piWebApiHttpService.getByPath("\\\\PIKFRANK\\internproject\\Rooms\\TestRoom1").then(function (response) {
+        piWebApiHttpService.getByPath(kfBasePath).then(function (response) {
             console.log("get by path:");
             console.log(response);
             $scope.validPath = response.data;
@@ -75,12 +82,12 @@ piWebApiApp.controller("mainCtrl", function ($scope, piWebApiHttpService) {
             $scope.validPath = false;
         });
 
-        // this needs mad work -- watch video to learn --> https://pisquare.osisoft.com/videos/1577
-        piWebApiHttpService.postPoint(body).then(function (response) {
-            console.log(response);
-        }, function (error) {
-            console.log(error);
-        });
+        // // this needs mad work -- watch video to learn --> https://pisquare.osisoft.com/videos/1577
+        // piWebApiHttpService.postPoint(body).then(function (response) {
+        //     console.log(response);
+        // }, function (error) {
+        //     console.log(error);
+        // });
 
         // piWebApiHttpService.getByWebId($scope.webId).then(function (response) {
         //     $scope.webId = response.data;
@@ -127,40 +134,4 @@ piWebApiApp.controller("mainCtrl", function ($scope, piWebApiHttpService) {
         //     $scope.piPointExistsValue = false;  
         // });  
     }
-});
-
-var map;
-
-function renderMap() {
-
-    map = new google.maps.Map(document.getElementById('map'), {
-        zoom: 20,
-        mapTypeId: 'satellite',
-        heading: 0,
-        tilt: 0
-    });
-    // var xhr = new XMLHttpRequest;
-    // //get location
-    // xhr.open('GET', 'https://maps.googleapis.com/maps/api/geocode/json?address=1600+Amphitheatre+Parkway,+Mountain+View,+CA&key=' + googleAPIKey);
-    // console.log(xhr);
-    var geocoder = new google.maps.Geocoder();
-    // TODO: fix hardcode
-    var address = "1600 Alvarado Street, San Leandro";
-    geocoder.geocode({ 'address': address }, function (results, status) {
-        if (status === 'OK') {
-            // console.log(results[0]);
-            map.setCenter(results[0].geometry.location);
-            // var marker = new google.maps.Marker({
-            //     map: map,
-            //     position: results[0].geometry.location 
-            // });
-        } else {
-            alert('Geocode was not successful for the following reason: ' + status);
-        }
-    });
-
-
-    // $scope.show = false;
-
-    // return map;
-}
+}]);
