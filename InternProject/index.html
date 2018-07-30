@@ -12,7 +12,7 @@
 <!--The mainContrl is our main AngularJS controller-->
 <!--Variables declared within $scope will manipulate the DOM within the body node-->
 
-<body ng-controller="mainCtrl" ng-click="getData()">
+<body ng-controller="mainCtrl">
     <!-- <div ng-show="showMap == true" id="overlay"> -->
     <!-- <img src="Floorplan.jpg"> -->
     <!-- <div id="floating-panel" class="overlay">
@@ -47,7 +47,7 @@
             <img src="Floorplan.jpg">
         </div>
         <div id="floorplan_child">
-            <div id="square1" class="room square square_top"></div>
+            <div id="square1" class="room square square_top" ng-click="addPoint()"></div>
             <div id="square2" class="room square square_top" content="width=device-width, initial-scale=1"></div>
             <div id="square4" class="room square square_top" content="width=device-width, initial-scale=1"></div>
             <div id="square5" class="room square square_top" content="width=device-width, initial-scale=1"></div>
