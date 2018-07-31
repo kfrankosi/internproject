@@ -42,7 +42,7 @@ piWebApiApp.controller("mainCtrl", ["$scope", function ($scope, piWebApiHttpServ
     $scope.addPoint = function () {
         var pyPath = "c/User/kfrank/source/Repos/InternProject/InternProject/landen_wrapper.py";
         var body = JSON.stringify({
-            "Timestamp": "2018-07-31T17:34:39Z",
+            "Timestamp": "2018-07-31T17:55:39Z",
             "Value": 100,
             "UnitsAbbreviation": "",
             "Good": true,
@@ -50,29 +50,43 @@ piWebApiApp.controller("mainCtrl", ["$scope", function ($scope, piWebApiHttpServ
         });
         var xhr = new XMLHttpRequest();
         var tagName = "ComfortValue";
+        var webId;
+        var req;
+        $.ajax({
+            type: "GET",
+            url: kfrankBase + "assetservers",
+            xhrFields: {
+                withCredentials: true
+            },
+            success: function (response) {
+                req = response;
+                webId = req['Items'][0]['Links']['Databases'];
+                $.ajax({
+                    type: "GET",
+                    url: webId,
+                    xhrFields: {
+                        withCredentials: true
+                    },
+                    success: function (response) {
+                        req = response;
+                        console.log(req);
+                        // webId = req['Items'][0]['Links']['Databases'];
+                    }
+                });
 
-        var webId = "F1AbFZErvcQ4i_kaeZo0kfGe5aQlA2JcOiU6BG3YwAd3LcnpQKVVGx-7bVV40IN6GyK561gUElLRlJBTktcSU5URVJOUFJPSkVDVFxFVkVOVEZSQU1FU1tORVcgRU5UUlkgMjAxOC0wNy0zMSAxMDozNzo0Mi4wMDBdfENPTUZPUlRWQUxVRQ";
+            }
+        });
 
-        // $.ajax({
-        //     data: body,
-        //     type: "PUT",
-        //     url: kfrankBase + "streams/" + webId + "/value",
-        //     dataType: "application/json",
-        //     success: function (response) {
-        //         console.log(response);
-        //     }
-        // });
-
-        xhr = new XMLHttpRequest();
-        xhr.open("POST", kfrankBase + "streams/" + webId + "/value");
-        xhr.withCredentials = true;
-        xhr.setRequestHeader('Accept', 'application/json');
-        xhr.setRequestHeader('Content-Type', 'application/json');
-        // xhr.overrideMimeType("application/json");
-        xhr.send(body);
-        xhr.onload = function () {
-            console.log(xhr);
-        }
+        // xhr = new XMLHttpRequest();
+        // xhr.open("POST", kfrankBase + "streams/" + webId + "/value");
+        // xhr.withCredentials = true;
+        // xhr.setRequestHeader('Accept', 'application/json');
+        // xhr.setRequestHeader('Content-Type', 'application/json');
+        // // xhr.overrideMimeType("application/json");
+        // xhr.send(body);
+        // xhr.onload = function () {
+        //     console.log(xhr);
+        // }
     }
 
 
@@ -179,16 +193,13 @@ piWebApiApp.controller("mainCtrl", ["$scope", function ($scope, piWebApiHttpServ
     }
 }]);
 
-function getReq(url, xhr) {
-    // var xhr = new XMLHttpRequest();
-    // xhr.responseType = 'json';
-    xhr.open('GET', url);
-    xhr.overrideMimeType("application/json");
-    xhr.send();
-
-    xhr.onload = function () {
-        console.log(xhr);
-        console.log(xhr.responseText);
-        return xhr.responseText;
-    }
+function getReq(url) {
+    return $.ajax({
+        type: "GET",
+        url: kfrankBase + url,
+        xhrFields: {
+            withCredentials: true
+        }
+    });
 }
+
