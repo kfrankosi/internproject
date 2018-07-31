@@ -3,6 +3,7 @@
 
 var piWebApiApp = angular.module("PiWebApiSampleApp", []);
 var googleAPIKey = "AIzaSyD3tl-i_Mg8Z7uEIT82ElNO7vT1mbTx6hI";
+var kfrankBase = "https://pikfrank.osisoft.int/piwebapi/";
 
 
 piWebApiApp.controller("mainCtrl", ["$scope", function ($scope, piWebApiHttpService) {
@@ -39,39 +40,19 @@ piWebApiApp.controller("mainCtrl", ["$scope", function ($scope, piWebApiHttpServ
     }
 
     $scope.addPoint = function () {
-        console.log("adding new point");
-
-        var kfrankBase = "https://pikfrank.osisoft.int/piwebapi/";
-        $.ajax({
-            type: "GET",
-            url: kfrankBase,
-            crossDomain: true, 
-
-            success: function(response){
-                console.log(response);
-            },
-            error: function(error){
-                console.log(error);
-            }
-        });
 
 
-        // var kfPiWebApi = new PIWebApi(kfrankBase, true);
-        // var webId;
-        // console.log(kfPiWebApi);
-        // kfPiWebApi.dataServer.getByPath('\\\\PIKFRANK\\internproject').then(function (response) {
-        //     console.log(response);
-        //     webId = response.WebId;
-        //     console.log(webId);
-        // }).then(function () {
-        //     var newPoint = new PIWebApiClient.PIPoint(null, null, "testing testing", null, "Test PI Point for AngularJS PI Web API Client", "classic", "float32", null, null, null, false);
-        //     kfPiWebApi.dataServer.createPoint(kfPiWebApi.dataServer.WebId, newPoint).then(function (response) {
-        //         console.log('point ceated')
-        //         console.log(response.data);
-        //     }, function (error) {
-        //         console.log(error);
-        //     });
-        // });
+    }
+
+    $scope.getPoints = function () {
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', kfrankBase);
+        xhr.overrideMimeType("application/json");
+        xhr.send();
+        xhr.onload = function () {
+            console.log(xhr);
+            console.log(xhr.responseText);
+        }
     }
 
     $scope.floor = function (num) {
@@ -163,3 +144,17 @@ piWebApiApp.controller("mainCtrl", ["$scope", function ($scope, piWebApiHttpServ
         // });  
     }
 }]);
+
+function getReq(url, xhr) {
+    // var xhr = new XMLHttpRequest();
+    // xhr.responseType = 'json';
+    xhr.open('GET', url);
+    xhr.overrideMimeType("application/json");
+    xhr.send();
+
+    xhr.onload = function () {
+        console.log(xhr);
+        console.log(xhr.responseText);
+        return xhr.responseText;
+    }
+}
