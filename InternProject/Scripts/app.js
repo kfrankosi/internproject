@@ -40,19 +40,53 @@ piWebApiApp.controller("mainCtrl", ["$scope", function ($scope, piWebApiHttpServ
     }
 
     $scope.addPoint = function () {
-
-
-    }
-
-    $scope.getPoints = function () {
+        var pyPath = "c/User/kfrank/source/Repos/InternProject/InternProject/landen_wrapper.py";
+        var body = JSON.stringify({
+            "Timestamp": "2018-07-31T17:34:39Z",
+            "Value": 100,
+            "UnitsAbbreviation": "",
+            "Good": true,
+            "Questionable": false
+        });
         var xhr = new XMLHttpRequest();
-        xhr.open('GET', kfrankBase);
-        xhr.overrideMimeType("application/json");
-        xhr.send();
+        var tagName = "ComfortValue";
+
+        var webId = "F1AbFZErvcQ4i_kaeZo0kfGe5aQlA2JcOiU6BG3YwAd3LcnpQKVVGx-7bVV40IN6GyK561gUElLRlJBTktcSU5URVJOUFJPSkVDVFxFVkVOVEZSQU1FU1tORVcgRU5UUlkgMjAxOC0wNy0zMSAxMDozNzo0Mi4wMDBdfENPTUZPUlRWQUxVRQ";
+
+        // $.ajax({
+        //     data: body,
+        //     type: "PUT",
+        //     url: kfrankBase + "streams/" + webId + "/value",
+        //     dataType: "application/json",
+        //     success: function (response) {
+        //         console.log(response);
+        //     }
+        // });
+
+        xhr = new XMLHttpRequest();
+        xhr.open("POST", kfrankBase + "streams/" + webId + "/value");
+        xhr.withCredentials = true;
+        xhr.setRequestHeader('Accept', 'application/json');
+        xhr.setRequestHeader('Content-Type', 'application/json');
+        // xhr.overrideMimeType("application/json");
+        xhr.send(body);
         xhr.onload = function () {
             console.log(xhr);
-            console.log(xhr.responseText);
         }
+    }
+
+
+    $scope.getPoints = function (extension) {
+        // var xhr = new XMLHttpRequest();
+        // xhr.open('GET', kfrankBase + ((extension === undefined) ? "" : extension)); // sets extension to empty string if DNE
+        // xhr.withCredentials = true;
+        // xhr.setRequestHeader('Accept', 'application/json');
+        // xhr.setRequestHeader('Access-Control-Allow-Credentials', 'true');
+        // // xhr.overrideMimeType("application/json");
+        // xhr.send();
+        // xhr.onload = function () {
+        //     console.log(xhr.responseText);
+        // }
     }
 
     $scope.floor = function (num) {
