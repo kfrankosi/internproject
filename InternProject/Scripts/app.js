@@ -27,8 +27,18 @@ app.controller("mainCtrl", function ($scope, piwebapi) {
         // "F1RDZErvcQ4i_kaeZo0kfGe5aQq_D8pUyRoUOMKrCk_SnK8gUElLRlJBTktcSU5URVJOUFJPSkVDVA"
     ).then(function (response) {
         attributes = response.data.Items;
+
+        var select = document.getElementById("tagName");
+
+        // actually placing items into menu
         attributes.forEach(function (element) {
-            console.log(element.Name);
+            if (element.Name != "ID") {
+                var opt = document.createElement('option');
+                opt.value = element.Name;
+                opt.innerHTML = element.Name;
+                select.appendChild(opt);
+                console.log(element.Name);
+            }
         });
     }, function (error) {
         console.log(error);
