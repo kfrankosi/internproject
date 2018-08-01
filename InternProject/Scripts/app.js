@@ -131,20 +131,29 @@ piWebApiApp.controller("mainCtrl", ["$scope", function ($scope, piWebApiHttpServ
         //     $scope.piServerExistsValue = false;
         // });
 
+<<<<<<< HEAD
         piWebApiHttpService.getByPath(kfBasePath).then(function (response) {
             console.log("get by path:");
             console.log(response);
+=======
+        piWebApiHttpService.getByPath($scope.path).then(function (response) {
+            console.log("get by path:")
+            console.log(response)
+>>>>>>> parent of d02e708... working to make post request
             $scope.validPath = response.data;
         }, function (error) {
             $scope.validPath = false;
         });
 
+<<<<<<< HEAD
         // // this needs mad work -- watch video to learn --> https://pisquare.osisoft.com/videos/1577
         // piWebApiHttpService.postPoint(body).then(function (response) {
         //     console.log(response);
         // }, function (error) {
         //     console.log(error);
         // });
+=======
+>>>>>>> parent of d02e708... working to make post request
 
         // piWebApiHttpService.getByWebId($scope.webId).then(function (response) {
         //     $scope.webId = response.data;
