@@ -1,6 +1,8 @@
 ﻿<!DOCTYPE html>
 <!--This is where you define the name of your AngularJS app-->
-<html ng-app="PiWebApiSampleApp">
+<script src="config.js"></script>
+
+<html ng-app="WebApiApp">
 
 <head>
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
@@ -47,7 +49,7 @@
             <img src="Floorplan.jpg">
         </div>
         <div id="floorplan_child">
-            <div id="square1" class="room square square_top" ng-click="getPoints('\\\\PIKFRANK\\internproject\\Entry'); addPoint()"></div>
+            <div id="square1" class="room square square_top" ng-click="getPoints('\\\\PIKFRANK\\internproject\\Entry'); addPoint('ComfortValue', '45')"></div>
             <div id="square2" class="room square square_top" content="width=device-width, initial-scale=1"></div>
             <div id="square4" class="room square square_top" content="width=device-width, initial-scale=1"></div>
             <div id="square5" class="room square square_top" content="width=device-width, initial-scale=1"></div>
@@ -74,176 +76,19 @@
 
     <!--The div below will appear only if $scope.requestMode == true-->
     <!-- Set to == true to see boxes from initial web app -->
-    <div ng-show="requestMode != true">
-        <h1>Request PI Data</h1>
-        <p>
-            Please fill in your details below and click on &quot;Get PI Data&quot;. Fields marked with an asterisk (*) are required.
-        </p>
-        <div>
-            <div style="width: 30em;">
-                <label for="piServerName">PI Server Name *</label>
-                <!--The value of the input below is bound to the value of the $scope.piServerName.-->
-                <input type="text" name="piServerName" id="piServerName" value="" ng-model="piServerName" />
-                <!-- <label for="piPointName">PI Point name *</label> -->
-                <!-- <input type="text" name="piPointName" id="piPointName" value="" ng-model="piPointName" /> -->
-                <label for="startTime">Start time *</label>
-                <input type="text" name="startTime" id="startTime" value="" ng-model="startTime" />
-                <label for="endTime">End time *</label>
-                <input type="text" name="endTime" id="endTime" value="" ng-model="endTime" />
-                <label for="interval">Interval *</label>
-                <input type="text" name="interval" id="interval" value="" ng-model="interval" />
 
-
-                <label for="path">Path *</label>
-                <input type="text" name="path" id="path" value="\\\\OAKPIAF\\Facilities-1600+Alvarado\\Devices\\VAVCO 2-01|Temp" ng-model="path"
-                />
-
-                <label for="path">WebId *</label>
-                <input type="text" name="webId" id="webId" value="" ng-model="webId" />
-
-                <!-- <label for="getsnap">Get Snapshot?</label>
-                <select name="getsnap" id="getsnap" size="1" ng-model="getSnap" ng-options="option.name for option in yesOrNoOptions"> </select>
-
-                <label for="getrec">Get Recorded Data?</label>
-                <select name="getrec" id="getrec" size="1" ng-model="getRec" ng-options="option.name for option in yesOrNoOptions"> </select>
-
-
-                <label for="getint">Get Interpolated Data?</label>
-                <select name="getint" id="getint" size="1" ng-model="getInt" ng-options="option.name for option in yesOrNoOptions"> </select> -->
-
-
-                <div style="clear: both;">
-                    <!--This function will make Http request and store the results-->
-                    <input type="submit" id="submitButton" value="Get PI Data!" ng-click="getData()" />
-                    <!--This function will change the values declared on $scope which are bound to some DOM elements-->
-                    <input type="button" id="DefaultButton" ng-click="defaultValues()" value="Default Values" style="margin-right: 20px;" />
-                </div>
-            </div>
-        </div>
-    </div>
-    <!--After running $scope.getData(), $scope.requestMode will become equal to false. As a result the second div will be shown-->
-    <div ng-show="requestMode != true">
-        <h1>Displaying SINUSOID data</h1>
-
-
-        <h2>Connection information</h2>
-        <br />
-        <table border="0" style="width: 20em; border: 1px solid #666;">
-            <tr>
-                <th>Property</th>
-                <th>Value</th>
-            </tr>
-
-
-            <tr>
-                <td>PI Server</td>
-                <!--Using { {} } also binds the DOM with variables declared under $scope-->
-                <td id="PIServerNameValue">{{piServerName}}</td>
-            </tr>
-            <tr>
-                <td>PI Point</td>
-                <td id="PIPointNameValue">{{piPointName}}</td>
-            </tr>
-            <tr>
-                <td>Start time</td>
-                <td id="StartTimeValue">{{startTime}}</td>
-            </tr>
-            <tr>
-                <td>End time</td>
-                <td id="EndTimeValue">{{endTime}}</td>
-            </tr>
-            <tr>
-                <td>Interval</td>
-                <td id="IntervalValue">{{interval}}</td>
-            </tr>
-
-
-            <tr>
-                <td>Does the PI Server exist?</td>
-                <td id="PIServerExistValue">{{piServerExistsValue}}</td>
-            </tr>
-
-            <tr>
-                <td>Valid Path?</td>
-                <td id="ValidPath">{{validPath}}</td>
-            </tr>
-            <!-- <tr>
-                <td>Does the PI Point exist?</td>
-                <td id="PIPointExistValue">{{piPointExistsValue}}</td>
-            </tr> -->
-        </table>
-
-
-        <div id="errors">
-            <!--If errors are detected, they will be displayed here-->
-            <p ng-repeat="error in snapshotError.Errors">{{error}}</p>
-            <p ng-repeat="error in recordedErrorError.Errors">{{error}}</p>
-            <p ng-repeat="error in interpolatedError.Errors">{{error}}</p>
-            <p ng-repeat="error in piServerError.Errors">{{error}}</p>
-            <p ng-repeat="error in piPointError.Errors">{{error}}</p>
-            <!--ng-repeat will iterate through all arrays-->
-        </div>
-        <!--The div below will appear if a webId is found and if the user has selected to get the snapshot on the previous screen-->
-        <div ng-show="getSnap.value == true && webId != null">
-            <h2 class="snapshot">Snapshot Value of Sinusoid</h2>
-            <br />
-            <table class="snapshot" border="0" style="width: 20em; border: 1px solid #666;">
-                <tr>
-                    <th>Value</th>
-                    <th>Timestamp</th>
-                </tr>
-                <tr>
-                    <td>{{snapshotData.Value}}</td>
-                    <td>{{snapshotData.Timestamp}}</td>
-                </tr>
-            </table>
-        </div>
-        <br />
-        <br />
-
-
-        <div ng-show="getRec.value == true && webId != null">
-            <h2 class="recorded">Recorded Values of Sinusoid</h2>
-            <br />
-            <table class="recorded" border="0" style="width: 20em; border: 1px solid #666;">
-                <tr>
-                    <th>Value</th>
-                    <th>Timestamp</th>
-                </tr>
-                <!--Iterating through all the values received-->
-
-
-                <tr ng-repeat="item in recordedData.Items">
-                    <td>{{item.Value}}</td>
-                    <td>{{item.Timestamp}}</td>
-                </tr>
-            </table>
-        </div>
-        <br />
-        <br />
-        <div ng-show="getInt.value == true && webId != null">
-            <h2 class="interpolated">Interpolated Values of Sinusoid</h2>
-            <br />
-            <table class="interpolated" border="0" style="width: 20em; border: 1px solid #666;">
-                <tr>
-                    <th>Value</th>
-                    <th>Timestamp</th>
-                </tr>
-                <tr ng-repeat="item in interpolatedData.Items">
-                    <td>{{item.Value}}</td>
-                    <td>{{item.Timestamp}}</td>
-                </tr>
-            </table>
-            <br />
-            <br />
-        </div>
-    </div>
 
     <script src="Scripts/angular.min.js"></script>
-    <script src="dist/jquery-piwebapi-1.11.0.min.js"></script>
-    <script src="dist/jquery-piwebapi-1.11.0.js"></script>
+    <!-- <script src="dist/jquery-piwebapi-1.11.0.min.js"></script>
+    <script src="dist/jquery-piwebapi-1.11.0.js"></script> -->
     <script src="Scripts/app.js"></script>
-    <script src="Scripts/piwebapi.js"></script>
+    <!-- <script src="Scripts/piwebapi.js"></script> -->
+    <!-- <script src="Scripts/sample_main.js"></script> -->
+    <script src="Scripts/angular-base64.js"></script>
+    <script src="Scripts/angular-base64.min.js"></script>
+    <script src="Scripts/angular-piwebapi-1.11.0.js"></script>
+    <script src="Scripts/angular-piwebapi-1.11.0.min.js"></script>
+
 </body>
 
 
