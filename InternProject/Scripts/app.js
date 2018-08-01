@@ -13,21 +13,37 @@ app.run(function (piwebapi) {
 app.controller("mainCtrl", function ($scope, piwebapi) {
     $scope.onFloor = true;
 
-
     piwebapi.home.get().then(function (response) {
-        console.log(response.data);
+        // console.log(response.data);
     }, function (error) {
         console.log(error);
     });
 
+
+    var attributes;
+    // filling dropdown menu with tagname options
+    piwebapi.assetDatabase.findElementAttributes(
+        piwebapi.webIdHelper.generateWebIdByPath("\\\\PIKFRANK\\internproject", "PIAssetDatabase")
+        // "F1RDZErvcQ4i_kaeZo0kfGe5aQq_D8pUyRoUOMKrCk_SnK8gUElLRlJBTktcSU5URVJOUFJPSkVDVA"
+    ).then(function (response) {
+        attributes = response.data.Items;
+        attributes.forEach(function (element) {
+            console.log(element.Name);
+        });
+    }, function (error) {
+        console.log(error);
+    });
+
+
+
     piwebapi.dataServer.getByPath("\\\\PIKFRANK").then(function (serverResponse) {
-        console.log(serverResponse.data);
+        // console.log(serverResponse.data);
         var pointId;
         piwebapi.dataServer.getPoints(
             serverResponse.data.WebId, null, "ComfortValue"
         ).then(function (response) {
             // pointId = (response.data['Items'][0].WebId); // first point
-            console.log(response);
+            // console.log(response);
         }, function (error) {
             console.log(error);
         });
@@ -37,9 +53,9 @@ app.controller("mainCtrl", function ($scope, piwebapi) {
             val.Timestamp = ("*");
             val.Value = (value);
             piwebapi.attribute.getByPath("\\\\PIKFRANK\\internproject\\Entry|" + tagname).then(function (response) {
-                console.log(response.data.WebId);
+                // console.log(response.data.WebId);
                 piwebapi.stream.updateValue(response.data.WebId, val, null, null, null, null).then(function (response) {
-                    console.log(response);
+                    // console.log(response);
                 }, function (error) {
                     console.log(error);
                 });

@@ -22,22 +22,15 @@
         <input type="button" value="Toggle DOM attachment" onclick="overlay.toggleDOM();"></input>
     </div> -->
     <!-- </div> -->
-
-    <div class="dropdown" ng-show="displayMenu==false">
-        <button class="dropbtn">Floor</button>
-        <div class="dropdown-content" id="floor-menu">
-            <!-- <a href="#">Link 1</a>
-            <a href="#">Link 2</a>
-            <a href="#">Link 3</a> -->
-            <a ng-click="floor(2)">Floor 2</a>
-            <a ng-click="floor(3)">Floor 3</a>
-            <a ng-click="floor(4)">Floor 4</a>
-            <a ng-click="floor(5)">Floor 5</a>
-            <a ng-click="floor(6)">Floor 6</a>
-        </div>
+    <div id="userInput" class="inputBox">
+        <label for="tagName">Tag Name</label>
+        <!-- Make into a dropdown menu -->
+        <select name="tagName" id="tagName" value="" ng-model="tagName" class="inputBox">
+            <option value="opt1"></option>
+        </select>
     </div>
-    <!-- Div that has the map appearing -->
 
+    <!-- Div that has the map appearing -->
     <div ng-show="onFloor==true" class="floor-info">
         <!-- <div class="dropbtn">
             <h1>

@@ -177,3 +177,7 @@ img {
 #floorplan_child {
     position: relative;
 }
+
+.inputBox {
+    position: absolute;
+}
