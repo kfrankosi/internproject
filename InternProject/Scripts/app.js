@@ -1,9 +1,7 @@
 //Make sure the name below is the same declared on  <html ng-app="PiWebApiSampleApp">  
 
 let baseUrl = "https://pikfrank.osisoft.int/piwebapi";
-// var piWebApiApp = angular.module("PiWebApiSampleApp", []);
-var googleAPIKey = "AIzaSyD3tl-i_Mg8Z7uEIT82ElNO7vT1mbTx6hI";
-
+let buildingUrl = "https://oakpicoresight.osisoft.int:8443/piwebapi";
 var app = angular.module(ngAppName, ['ngPIWebApi']);
 
 app.run(function (piwebapi) {
@@ -18,7 +16,6 @@ app.controller("mainCtrl", function ($scope, piwebapi) {
     }, function (error) {
         console.log(error);
     });
-
 
     var attributes;
     // filling dropdown menu with tagname options
@@ -73,6 +70,41 @@ app.controller("mainCtrl", function ($scope, piwebapi) {
         }
     }, function (error) {
         console.log("get by path error");
+        console.log(error);
+    });
+
+
+});
+
+
+
+
+
+
+
+
+
+
+var building = angular.module(ngAppName, ['ngPIWebApi']);
+
+building.run(function (piwebapi) {
+    piwebapi.ConfigureInstance(buildingUrl, false, "kfrank", "Dinosaur8!");
+});
+
+building.controller("mainCtrl", function ($scope, piwebapi) {
+    $scope.onFloor = true;
+
+    piwebapi.home.get().then(function (response) {
+        console.log(response.data);
+    }, function (error) {
+        console.log(error);
+    });
+    // Get all VAVCOs for a list
+    piwebapi.assetDatabase.getElements(
+        piwebapi.webIdHelper.generateWebIdByPath("\\\\CB-OAKPI4-AF1\\Facilities - 1600 Alvarado_Test\\cb-oakpi4-relay", "PIAssetDatabase")
+    ).then(function (response) {
+        console.log(response);
+    }, function (error) {
         console.log(error);
     });
 
