@@ -1,14 +1,18 @@
 //Make sure the name below is the same declared on  <html ng-app="PiWebApiSampleApp">  
 
 let baseUrl = "https://pikfrank.osisoft.int/piwebapi";
-let buildingUrl = "https://oakpicoresight.osisoft.int:8443/piwebapi";
 var app = angular.module(ngAppName, ['ngPIWebApi']);
+var dbId;
 
 app.run(function (piwebapi) {
     piwebapi.ConfigureInstance(baseUrl, false, "kfrank", "Dinosaur8!");
 });
 
 app.controller("mainCtrl", function ($scope, piwebapi) {
+
+    // first get all variables to be used throughout
+    dbId = piwebapi.webIdHelper.generateWebIdByPath("\\\\PIKFRANK\\internproject", "PIAssetDatabase");
+
     $scope.onFloor = true;
 
     piwebapi.home.get().then(function (response) {
@@ -20,8 +24,7 @@ app.controller("mainCtrl", function ($scope, piwebapi) {
     var attributes;
     // filling dropdown menu with tagname options
     piwebapi.assetDatabase.findElementAttributes(
-        piwebapi.webIdHelper.generateWebIdByPath("\\\\PIKFRANK\\internproject", "PIAssetDatabase")
-        // "F1RDZErvcQ4i_kaeZo0kfGe5aQq_D8pUyRoUOMKrCk_SnK8gUElLRlJBTktcSU5URVJOUFJPSkVDVA"
+        dbId
     ).then(function (response) {
         attributes = response.data.Items;
 
@@ -42,6 +45,20 @@ app.controller("mainCtrl", function ($scope, piwebapi) {
     });
 
 
+    //fill dropdown menu with different vavcos -- later need to make them more user friendly
+    var VAVCOs;
+    // returns all elements in the db -- need to filter out VAVCOs
+    piwebapi.assetDatabase.getElements(dbId, null, null, null, null, null /*name filter*/, true).then(function (response) {
+        console.log(response);
+        (response.data.Items).forEach(function (element) {
+            if (element.Name.indexOf("VAVCO") > -1) {
+                VAVCOs += element;
+                console.log(element);
+            }
+        });
+    }, function (error) {
+        console.log(error);
+    });
 
     piwebapi.dataServer.getByPath("\\\\PIKFRANK").then(function (serverResponse) {
         // console.log(serverResponse.data);
@@ -73,42 +90,9 @@ app.controller("mainCtrl", function ($scope, piwebapi) {
         console.log(error);
     });
 
-
 });
 
 
-
-
-
-
-
-
-
-
-var building = angular.module(ngAppName, ['ngPIWebApi']);
-
-building.run(function (piwebapi) {
-    piwebapi.ConfigureInstance(buildingUrl, false, "kfrank", "Dinosaur8!");
-});
-
-building.controller("mainCtrl", function ($scope, piwebapi) {
-    $scope.onFloor = true;
-
-    piwebapi.home.get().then(function (response) {
-        console.log(response.data);
-    }, function (error) {
-        console.log(error);
-    });
-    // Get all VAVCOs for a list
-    piwebapi.assetDatabase.getElements(
-        piwebapi.webIdHelper.generateWebIdByPath("\\\\CB-OAKPI4-AF1\\Facilities - 1600 Alvarado_Test\\cb-oakpi4-relay", "PIAssetDatabase")
-    ).then(function (response) {
-        console.log(response);
-    }, function (error) {
-        console.log(error);
-    });
-
-});
 
 // piWebApiApp.controller("mainCtrl", function ($scope, piWebApiHttpService) {
 

@@ -91,54 +91,55 @@ def makePoint(tag, write_val):
     my_PI_server.write(tag, defaultVal, datetime.now())
 
 
-#if __name__ == '__main__':
-'''
-this is a test to make sure things work on your computer; you need to put in the server name and a tag name
-if you run this script, it will execute this code, however if you import this file, it will ignore this block
-'''
+    if __name__ == '__main__':
+    '''
+    this is a test to make sure things work on your computer; you need to put in the server name and a tag name
+    if you run this script, it will execute this code, however if you import this file, it will ignore this block
+    '''
+
+    my_PI_server = PI_server('PIKFRANK')  # put your server name here
+
+    # def write(tagname, write_value, write_timestamp=None):
+    #     # if you need write funcitonality, here is the syntax:
+    #     # write_value = 12345
+    #     write_timestamp = datetime.now()
+    #     my_PI_server.write(tagname, write_value, write_timestamp)
+
+    tagname = 'ComfortValue'  # 'Status'  # put your tag name here
+    write_value = 51  # 'New'
+
+    if(len(sys.argv) > 1):
+        tagname = (sys.argv)[1]
+        write_value = (sys.argv)[2]
+        print(tagname, write_value)
+
+    my_PI_server.write(tagname, write_value, datetime.now())
+
+    # starting date -- one day back
+    start_timestamp = datetime.now() - timedelta(seconds=30)
+    end_timestamp = datetime.now()  # current time
+    # start_timestamp + timedelta(days=3) # number of days after
+    frequency = '5s'
+    # you can use datetime.now() if you want the current datetime. timedelta only accepts days and seconds, FYI
+
+    # read the current value of a tag
+    value, timestamp = my_PI_server.read_current(tagname)
+    print('Read current value')
+    print('Tagname:', tagname)
+    print('Value:', value, 'Timestamp:', timestamp)
+
+    # read an interpolated range of values of a tag
+    values, timestamps = my_PI_server.read_range(
+        tagname, start_timestamp, end_timestamp, frequency)
+    print('\nRead range with a frequency of', frequency)
+    print('Tagname:', tagname)
+
+    # print out each value
+    for i in range(len(values)):
+        print('Value:', values[i], 'Timestamp:', timestamps[i])
+
+    print
+
+    # my_PI_server.write(tagname, "Default", datetime.now())
 
 my_PI_server = PI_server('PIKFRANK')  # put your server name here
-
-# def write(tagname, write_value, write_timestamp=None):
-#     # if you need write funcitonality, here is the syntax:
-#     # write_value = 12345
-#     write_timestamp = datetime.now()
-#     my_PI_server.write(tagname, write_value, write_timestamp)
-
-tagname = 'ComfortValue'  # 'Status'  # put your tag name here
-write_value = 51  # 'New'
-
-if(len(sys.argv) > 1):
-    tagname = (sys.argv)[1]
-    write_value = (sys.argv)[2]
-    print(tagname, write_value)
-
-my_PI_server.write(tagname, write_value, datetime.now())
-
-# starting date -- one day back
-start_timestamp = datetime.now() - timedelta(seconds=30)
-end_timestamp = datetime.now()  # current time
-# start_timestamp + timedelta(days=3) # number of days after
-frequency = '5s'
-# you can use datetime.now() if you want the current datetime. timedelta only accepts days and seconds, FYI
-
-# read the current value of a tag
-value, timestamp = my_PI_server.read_current(tagname)
-print('Read current value')
-print('Tagname:', tagname)
-print('Value:', value, 'Timestamp:', timestamp)
-
-# read an interpolated range of values of a tag
-values, timestamps = my_PI_server.read_range(
-    tagname, start_timestamp, end_timestamp, frequency)
-print('\nRead range with a frequency of', frequency)
-print('Tagname:', tagname)
-
-# print out each value
-for i in range(len(values)):
-    print('Value:', values[i], 'Timestamp:', timestamps[i])
-
-print
-
-# my_PI_server.write(tagname, "Default", datetime.now())
-
