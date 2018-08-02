@@ -60,12 +60,14 @@ app.controller("mainCtrl", function ($scope, piwebapi) {
         // returns all elements in the db -- need to filter out VAVCOs
         piwebapi.assetDatabase.getElements(dbId, null, null, null, null, null, true).then(function (response) {
             console.log(response);
+            // have another list to choose floor num and then generate list from that
+            var floorNum = 5;
             var select = document.getElementById("locationName");
             (response.data.Items).forEach(function (element) {
-                if (element.Name.indexOf("VAVCO") > -1) {
+                if (element.Name.indexOf("VAVCO " + floorNum) > -1) {
                     var opt = document.createElement('option');
                     opt.value = element.Name;
-                    opt.innerHTML = element.Name;
+                    opt.innerHTML = element.Name.substring(element.Name.indexOf("-") + 1);//,element.Name.indexOf("-"));
                     select.appendChild(opt);
                 }
             });

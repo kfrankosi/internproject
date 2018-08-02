@@ -22,11 +22,22 @@
         <input type="button" value="Toggle DOM attachment" onclick="overlay.toggleDOM();"></input>
     </div> -->
     <!-- </div> -->
-    <div id="userInput" class="inputBox">
+    <div id="userInput" class="parentBox">
         <label for="locationName">Location</label>
         <select name="locationName" id="locationName" class="inputBox">
             <option></option>
         </select>
+
+        <!-- Potentially change to be a sliding bar instead -->
+        <label for="comfortLevel">Comfort Level</label>
+        <select name="comfortLevel" id="comfortLevel" class="inputBox">
+            <option></option>
+            <option>Cold</option>
+            <option>Normal</option>
+            <option>Hot</option>
+        </select>
+
+        <input type="submit" id="submitButton">
     </div>
 
     <!-- Div that has the map appearing -->
@@ -41,8 +52,6 @@
             <img src="Floorplan.jpg">
         </div>
         <div id="floorplan_child">
-
-
             <div id="square1" class="room square square_top" ng-click="getPoints('\\\\PIKFRANK\\internproject\\Entry'); addPoint('Status', 'Testing')">
                 <div class="vavLabel">04</div>
             </div>
