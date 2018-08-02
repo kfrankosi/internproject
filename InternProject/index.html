@@ -23,9 +23,9 @@
     </div> -->
     <!-- </div> -->
     <div id="userInput" class="inputBox">
-        <label for="tagName">Tag Name</label>
-        <!-- Make into a dropdown menu -->
-        <select name="tagName" id="tagName" value="" class="inputBox">
+        <label for="locationName">Location</label>
+        <select name="locationName" id="locationName" class="inputBox">
+            <option></option>
         </select>
     </div>
 
@@ -41,23 +41,42 @@
             <img src="Floorplan.jpg">
         </div>
         <div id="floorplan_child">
-            <div id="square1" class="room square square_top" ng-click="getPoints('\\\\PIKFRANK\\internproject\\Entry'); addPoint('ComfortValue', '45')"></div>
-            <div id="square2" class="room square square_top" content="width=device-width, initial-scale=1"></div>
-            <div id="square4" class="room square square_top" content="width=device-width, initial-scale=1"></div>
-            <div id="square5" class="room square square_top" content="width=device-width, initial-scale=1"></div>
-            <div id="square6" class="room square square_top" content="width=device-width, initial-scale=1"></div>
+
+
+            <div id="square1" class="room square square_top" ng-click="getPoints('\\\\PIKFRANK\\internproject\\Entry'); addPoint('Status', 'Testing')">
+                <div class="vavLabel">04</div>
+            </div>
+            <div id="square2" class="room square square_top" content="width=device-width, initial-scale=1">
+                <div class="vavLabel">05</div>
+            </div>
+            <div id="squareRoom" class="room square square_top" content="width=device-width, initial-scale=1">
+                <div class="vavLabel">17</div>
+            </div>
+            <div id="square4" class="room square square_top" content="width=device-width, initial-scale=1">
+                <div class="vavLabel">06</div>
+            </div>
+            <div id="square5" class="room square square_top" content="width=device-width, initial-scale=1">
+                <div class="vavLabel" style="font-size: 75px;">07/08</div>
+            </div>
+            <div id="square6" class="room square square_top" content="width=device-width, initial-scale=1">
+                <div class="vavLabel">01</div>
+            </div>
 
             <div id="square1" class="room square square_middle"></div>
             <div id="square2" class="room square square_middle" content="width=device-width, initial-scale=1"></div>
             <div id="square4" class="room square square_middle" content="width=device-width, initial-scale=1"></div>
             <div id="square5" class="room square square_middle" content="width=device-width, initial-scale=1"></div>
-            <div id="square6" class="room square square_middle" content="width=device-width, initial-scale=1"></div>
+            <div id="square6" class="room square square_middle" content="width=device-width, initial-scale=1">
+                <div class="vavLabel">01</div>
+            </div>
 
             <div id="square1" class="room square square_bottom"></div>
             <div id="square2" class="room square square_bottom" content="width=device-width, initial-scale=1"></div>
             <div id="square4" class="room square square_bottom" content="width=device-width, initial-scale=1"></div>
             <div id="square5" class="room square square_bottom" content="width=device-width, initial-scale=1"></div>
-            <div id="square6" class="room square square_bottom" content="width=device-width, initial-scale=1"></div>
+            <div id="square6" class="room square square_bottom" content="width=device-width, initial-scale=1">
+                <div class="vavLabel">01</div>
+            </div>
 
         </div>
     </div>

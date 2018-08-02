@@ -3,68 +3,80 @@
 let baseUrl = "https://pikfrank.osisoft.int/piwebapi";
 var app = angular.module(ngAppName, ['ngPIWebApi']);
 var dbId;
+var webId;
 
 app.run(function (piwebapi) {
-    piwebapi.ConfigureInstance(baseUrl, false, "kfrank", "Dinosaur8!");
+    piwebapi.ConfigureInstance(baseUrl, false, "kfrank", atob("RGlub3NhdXI4IQ==")); //base64 encoded password
 });
+
+// returns a promise that holds the dataserver Object -- can manipulate it in other areas of code
+function getVars(piwebapi) {
+    return new Promise(function (resolve, reject) {
+        // first get all variables to be used throughout
+        dbId = piwebapi.webIdHelper.generateWebIdByPath("\\\\PIKFRANK\\internproject", "PIAssetDatabase");
+        resolve(piwebapi.dataServer.getByPath("\\\\PIKFRANK"));
+    });
+}
 
 app.controller("mainCtrl", function ($scope, piwebapi) {
 
-    // first get all variables to be used throughout
-    dbId = piwebapi.webIdHelper.generateWebIdByPath("\\\\PIKFRANK\\internproject", "PIAssetDatabase");
-
-    $scope.onFloor = true;
-
-    piwebapi.home.get().then(function (response) {
-        // console.log(response.data);
-    }, function (error) {
-        console.log(error);
-    });
-
-    var attributes;
-    // filling dropdown menu with tagname options
-    piwebapi.assetDatabase.findElementAttributes(
-        dbId
-    ).then(function (response) {
-        attributes = response.data.Items;
-
-        var select = document.getElementById("tagName");
-
-        // actually placing items into menu
-        attributes.forEach(function (element) {
-            if (element.Name != "ID") {
-                var opt = document.createElement('option');
-                opt.value = element.Name;
-                opt.innerHTML = element.Name;
-                select.appendChild(opt);
-                console.log(element.Name);
-            }
+    getVars(piwebapi).then(function (response) {
+        webId = response.data.WebId;
+        $scope.onFloor = true;
+        console.log(webId);
+        piwebapi.home.get().then(function (response) {
+            // console.log(response.data);
+        }, function (error) {
+            console.log(error);
         });
-    }, function (error) {
-        console.log(error);
-    });
 
+        var attributes;
+        // filling dropdown menu with tagname options
+        piwebapi.assetDatabase.findElementAttributes(
+            dbId
+        ).then(function (response) {
+            // attributes = response.data.Items;
 
-    //fill dropdown menu with different vavcos -- later need to make them more user friendly
-    var VAVCOs;
-    // returns all elements in the db -- need to filter out VAVCOs
-    piwebapi.assetDatabase.getElements(dbId, null, null, null, null, null /*name filter*/, true).then(function (response) {
-        console.log(response);
-        (response.data.Items).forEach(function (element) {
-            if (element.Name.indexOf("VAVCO") > -1) {
-                VAVCOs += element;
-                console.log(element);
-            }
+            // var select = document.getElementById("locationName");
+
+            // // actually placing items into menu
+            // attributes.forEach(function (element) {
+            //     if (element.Name != "ID") {
+            //         var opt = document.createElement('option');
+            //         opt.value = element.Name;
+            //         opt.innerHTML = element.Name;
+            //         select.appendChild(opt);
+            //         console.log(element.Name);
+            //     }
+            // });
+        }, function (error) {
+            console.log(error);
         });
-    }, function (error) {
-        console.log(error);
-    });
 
-    piwebapi.dataServer.getByPath("\\\\PIKFRANK").then(function (serverResponse) {
+
+        /* Fill dropdown menu with different vavcos -- later need to make them more user friendly
+           Each corresponds to a thermostat */
+
+        // returns all elements in the db -- need to filter out VAVCOs
+        piwebapi.assetDatabase.getElements(dbId, null, null, null, null, null, true).then(function (response) {
+            console.log(response);
+            var select = document.getElementById("locationName");
+            (response.data.Items).forEach(function (element) {
+                if (element.Name.indexOf("VAVCO") > -1) {
+                    var opt = document.createElement('option');
+                    opt.value = element.Name;
+                    opt.innerHTML = element.Name;
+                    select.appendChild(opt);
+                }
+            });
+        }, function (error) {
+            console.log(error);
+        });
+
+        // piwebapi.dataServer.getByPath("\\\\PIKFRANK").then(function (serverResponse) {
         // console.log(serverResponse.data);
-        var pointId;
         piwebapi.dataServer.getPoints(
-            serverResponse.data.WebId, null, "ComfortValue"
+            webId, null, "ComfortValue"
         ).then(function (response) {
             // pointId = (response.data['Items'][0].WebId); // first point
             // console.log(response);
@@ -77,19 +89,19 @@ app.controller("mainCtrl", function ($scope, piwebapi) {
             val.Timestamp = ("*");
             val.Value = (value);
             piwebapi.attribute.getByPath("\\\\PIKFRANK\\internproject\\Entry|" + tagname).then(function (response) {
-                // console.log(response.data.WebId);
+                console.log(response.data.WebId);
                 piwebapi.stream.updateValue(response.data.WebId, val, null, null, null, null).then(function (response) {
-                    // console.log(response);
+                    console.log(response);
                 }, function (error) {
                     console.log(error);
                 });
             });
         }
-    }, function (error) {
-        console.log("get by path error");
-        console.log(error);
+        // }, function (error) {
+        //     console.log("get by path error");
+        //     console.log(error);
+        // });
     });
-
 });
 
 
