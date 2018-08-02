@@ -136,51 +136,65 @@ img {
     height: 23vh;
 }
 
-#square1 {
+.square1 {
     width: 12vw;
     left: 4vw;
     background-color: orange;
 }
 
-#square2 {
+.square2 {
     width: 29vw;
     left: 16vw;
     background-color: yellow;
 }
 
 #squareRoom {
-    width: 5.5vw;
+    width: 6vw;
     left: 45vw;
     background-color: blue;
 }
 
-#square4 {
+.square4 {
     /* background-color: green; */
     left: 51vw;
     width: 20vw;
 }
 
-#square5 {
+.square5 {
     /* background-color: blue; */
     left: 71vw;
     width: 9vw;
     background-color: orange;
 }
 
-#square6 {
+.square6 {
     left: 80vw;
     width: 12vw;
     background-color: green;
 }
 
-#square7 {
+.square7 {
     left: 4vw;
     width: 12vw;
 }
 
-#square8 {
+.square8 {
     left: 16vw;
     width: 25vw;
+}
+
+#medRoom {
+    left: 74vw;
+    width: 6vw;
+}
+
+.middleExtend {
+    width: 18vw;
+}
+
+#conf {
+    left: 53vw;
+    width: 9vw;
 }
 
 #floorplan_child {
