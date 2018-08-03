@@ -20909,8 +20909,7 @@ var PIWebApi = (function () {
                 var auth = this.base64.encode(this.username + ":" + this.password);
                 this.httpService.defaults.headers.common['Authorization'] = 'Basic ' + auth;
             }
-        }
-        else {
+        } else {
             this.httpService.defaults.withCredentials = true;
             this.httpService.defaults.useXDomain = true;
         }

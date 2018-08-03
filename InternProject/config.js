@@ -1,12 +1,16 @@
 let ngAppName = "WebApiApp";
 let serverId = "F1DSPriJQMfiM0mIGCBz973bBAUElLRlJBTks";
-var dbId, webId;
+var dbId, webId, user;
 
 // returns a promise that holds the dataserver Object -- can manipulate it in other areas of code
 function getVars(piwebapi) {
     return new Promise(function (resolve, reject) {
         // first get all variables to be used throughout
         dbId = piwebapi.webIdHelper.generateWebIdByPath("\\\\PIKFRANK\\internproject", "PIAssetDatabase");
+        //user =
+        piwebapi.system.cacheInstances().then(function (response) {
+            makePoint(piwebapi, "ID", response.data.Items[0].User);
+        });
         resolve(piwebapi.dataServer.getByPath("\\\\PIKFRANK"));
     });
 }
@@ -25,10 +29,8 @@ function makePoint(piwebapi, tagname, value) {
     return new Promise(function (resolve, reject) {
         // resolve(
         piwebapi.attribute.getByPath("\\\\PIKFRANK\\internproject\\Entry|" + tagname).then(function (response) {
-            console.log(response.data.WebId);
             piwebapi.stream.updateValue(response.data.WebId, val, null, null, null, null).then(function (response) {
                 resolve(response);
-                console.log(response);
             }, function (error) {
                 reject(error);
                 console.log(error);
@@ -69,7 +71,7 @@ function submitResponse(piwebapi) {
     var floorNum = document.getElementById("floorNumber").value; // can check using > 0
     var locName = document.getElementById("locationName").value; // can check using != '' --> don't need to check because will be valid if floorNum is
     var comfortLevel = document.getElementById("comfortLevel").value; // can check using != ''
-    
+
     if ((floorNum > 0) && (comfortLevel != '')) {
         newUserEntry(piwebapi, locName, comfortLevel);
     }

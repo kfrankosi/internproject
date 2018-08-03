@@ -5,7 +5,8 @@ var app = angular.module(ngAppName, ['ngPIWebApi']);
 
 
 app.run(function (piwebapi) {
-    piwebapi.ConfigureInstance(baseUrl, false, "kfrank", atob("RGlub3NhdXI4IQ==")); //base64 encoded password
+    piwebapi.ConfigureInstance(baseUrl, true);
+    // Set to true to enable kerberos -- still works when the configuration auth method is not kerberos...
 });
 
 app.controller("mainCtrl", function ($scope, piwebapi) {

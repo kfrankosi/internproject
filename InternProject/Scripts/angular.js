@@ -17355,7 +17355,7 @@ function qFactory(nextTick, exceptionHandler, errorOnUnhandledRejections) {
 
   extend(Promise.prototype, {
     then: function(onFulfilled, onRejected, progressBack) {
-      if (isUndefined(onFulfilled) && isUndefined(onRejected) && isUndefined(progressBack)) {
+      kif (isUndefined(onFulfilled) && isUndefined(onRejected) && isUndefined(progressBack)) {
         return this;
       }
       var result = new Promise();
