@@ -7,10 +7,6 @@ function getVars(piwebapi) {
     return new Promise(function (resolve, reject) {
         // first get all variables to be used throughout
         dbId = piwebapi.webIdHelper.generateWebIdByPath("\\\\PIKFRANK\\internproject", "PIAssetDatabase");
-        //user =
-        piwebapi.system.cacheInstances().then(function (response) {
-            makePoint(piwebapi, "ID", response.data.Items[0].User);
-        });
         resolve(piwebapi.dataServer.getByPath("\\\\PIKFRANK"));
     });
 }
@@ -56,7 +52,9 @@ function newUserEntry(piwebapi, locName, comfortLevel) {
     // change tag to begin gathering data (have to change so it can be triggered by another change later)
     makePoint(piwebapi, "Status", "Gathering Info")
         .then(function () {
-            console.log(comfortLevel);
+            piwebapi.system.cacheInstances().then(function (response) {
+                makePoint(piwebapi, "ID", response.data.Items[0].User);
+            });
             makePoint(piwebapi, "Room", locName);
             makePoint(piwebapi, "ComfortValue", comfortLevel); // need to convert to int value
         })
