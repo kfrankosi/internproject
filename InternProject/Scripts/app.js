@@ -18,23 +18,66 @@ app.controller("mainCtrl", function ($scope, piwebapi) {
         piwebapi.home.get().then(function (response) {
             // console.log(response.data);
         }, function (error) {
-            console.log(error);
+            console.log(error.data);
         });
 
         $scope.getUserEntries = function () {
             getUserVotes(piwebapi).then(function (response) {
                 console.log(response);
             }, function (error) {
-                console.log(error);
+                console.log(error.data);
             });
         }
 
-        $scope.getAvg = function () {
-            getLocAverage(piwebapi).then(function (response) {
-                console.log(response);
+        var rootPathId, elementTemplateId;
+        piwebapi.assetDatabase.getEventFrames(dbId).then(
+            function (response) {
+                console.log(rootIdPath = response.data.Items[0].WebId);
+                // console.log(rootPathId);
+                piwebapi.eventFrame.getEventFrames(rootIdPath).then(
+                    function (response) {
+                        console.log(elementTemplateId = response.data.WebId);
+                        var query = "AnalysisName:\"new status\" Template:\"New Entry\" |Status:=\"Ready\" |Room:=\"VAVCO 1-01\"";
+                        query = [
+                            new PIWebApiClient.PIValueQuery("Status", null, "Ready", "Equal"),
+                            new PIWebApiClient.PIValueQuery("Room", null, "VAVCO*", "Equal")
+                        ];
+                        var piQuery = new PIWebApiClient.PISearchByAttribute(/*id of root event frame*/rootPathId,
+                            "F1ETZErvcQ4i_kaeZo0kfGe5aQcE7dgFtyLEaY1FhPnhk8mQUElLRlJBTktcSU5URVJOUFJPSkVDVFxFTEVNRU5UVEVNUExBVEVTW05FVyBFTlRSWV0"
+                            , null, query);
+                        piwebapi.eventFrame.createSearchByAttribute(piQuery).then(
+                            function (response) {
+                                console.log(response);
+                            }, function (error) {
+                                console.log(error.data.Errors);
+                            }
+                        );
+                    }, function (error) {
+                        console.log(error.data);
+                    }
+                );
+
             }, function (error) {
-                console.log(error);
+                console.log(error.data.Errors);
             });
+
+
+
+
+        // piwebapi.eventFrame.executeSearchByAttribute()
+
+
+        $scope.getAvg = function () {
+            // must be a way to do this more robustly
+
+            // get all relevant event frames
+            // iterate through to collect all comfort values and then manually divide to take the average
+
+            // getLocAverage(piwebapi).then(function (response) {
+            //     console.log(response);
+            // }, function (error) {
+            //     console.log(error.data);
+            // });
         }
 
         $scope.changeFloor = function () {
@@ -57,7 +100,7 @@ app.controller("mainCtrl", function ($scope, piwebapi) {
                     }
                 });
             }, function (error) {
-                console.log(error);
+                console.log(error.data);
             });
         }
 
@@ -69,7 +112,7 @@ app.controller("mainCtrl", function ($scope, piwebapi) {
             // pointId = (response.data['Items'][0].WebId); // first point
             // console.log(response);
         }, function (error) {
-            console.log(error);
+            console.log(error.data);
         });
 
     });

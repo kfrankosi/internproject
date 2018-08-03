@@ -49,6 +49,11 @@ function newUserEntry(piwebapi, locName, comfortLevel) {
             comfortLevel = 1;
             break;
     }
+
+    // change status to gathering info while gathering info
+        // then change status to ready to trigger the event frame
+        // then change status to waiting to end event frame and wait for another entry
+
     // change tag to begin gathering data (have to change so it can be triggered by another change later)
     makePoint(piwebapi, "Status", "Gathering Info")
         .then(function () {
