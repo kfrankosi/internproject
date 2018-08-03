@@ -52,14 +52,17 @@ function newUserEntry(piwebapi, locName, comfortLevel) {
             break;
     }
     // change tag to begin gathering data (have to change so it can be triggered by another change later)
-    makePoint(piwebapi, "Status", "Ready").then(
-        function (response) {
+    makePoint(piwebapi, "Status", "Gathering Info")
+        .then(function () {
             console.log(comfortLevel);
             makePoint(piwebapi, "Room", locName);
             makePoint(piwebapi, "ComfortValue", comfortLevel); // need to convert to int value
-        }
-    ).then(makePoint(piwebapi, "Status", "Waiting") // change status tag last to trigger a new event frame that will capture the above changed info
-    )
+        })
+        // change status tag last to trigger a new event frame that will capture the above changed info
+        .then(makePoint(piwebapi, "Status", "Ready"))
+        // change status tag to waiting until another entry is made -- ends ready event frame but does not trigger a new one
+        .then(makePoint(piwebapi, "Status", "Waiting"));
+
 }
 
 function submitResponse(piwebapi) {
@@ -72,4 +75,12 @@ function submitResponse(piwebapi) {
     if (validInputs) {
         newUserEntry(piwebapi, locName, comfortLevel);
     }
+}
+
+function getLocAverage(piwebapi, locName) {
+    piwebapi.eventFrame.getEventFramesQuery(dbId, null, "AnalysisName:'new status' Template:'New Entry' |Status:='Ready' |Room:=\'" + locName + '\'').then(function (response) {
+        console.log(response.data.Items);
+    }, function (error) {
+        console.log(error);
+    });
 }

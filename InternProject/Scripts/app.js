@@ -13,12 +13,16 @@ app.controller("mainCtrl", function ($scope, piwebapi) {
     getVars(piwebapi).then(function (response) {
         webId = response.data.WebId;
         $scope.onFloor = true;
-        console.log(webId);
+
         piwebapi.home.get().then(function (response) {
             // console.log(response.data);
         }, function (error) {
             console.log(error);
         });
+
+
+        getLocAverage(piwebapi, "VAVCO 2-04");
+
 
         $scope.changeFloor = function () {
             /* Fill dropdown menu with different vavcos -- later need to make them more user friendly
