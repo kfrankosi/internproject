@@ -21,6 +21,14 @@ app.controller("mainCtrl", function ($scope, piwebapi) {
             console.log(error);
         });
 
+        $scope.getUserEntries = function () {
+            getUserVotes(piwebapi).then(function (response) {
+                console.log(response);
+            }, function (error) {
+                console.log(error);
+            });
+        }
+
         $scope.getAvg = function () {
             getLocAverage(piwebapi).then(function (response) {
                 console.log(response);

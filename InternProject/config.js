@@ -1,6 +1,6 @@
 let ngAppName = "WebApiApp";
 let serverId = "F1DSPriJQMfiM0mIGCBz973bBAUElLRlJBTks";
-var dbId, webId, user;
+var dbId, webId;
 
 // returns a promise that holds the dataserver Object -- can manipulate it in other areas of code
 function getVars(piwebapi) {
@@ -52,9 +52,11 @@ function newUserEntry(piwebapi, locName, comfortLevel) {
     // change tag to begin gathering data (have to change so it can be triggered by another change later)
     makePoint(piwebapi, "Status", "Gathering Info")
         .then(function () {
-            piwebapi.system.cacheInstances().then(function (response) {
-                makePoint(piwebapi, "ID", response.data.Items[0].User);
+            getUser(piwebapi).then(function (user) {
+                console.log(user);
+                makePoint(piwebapi, "ID", user);
             });
+
             makePoint(piwebapi, "Room", locName);
             makePoint(piwebapi, "ComfortValue", comfortLevel); // need to convert to int value
         })
@@ -63,6 +65,16 @@ function newUserEntry(piwebapi, locName, comfortLevel) {
         // change status tag to waiting until another entry is made -- ends ready event frame but does not trigger a new one
         .then(makePoint(piwebapi, "Status", "Waiting"));
 
+}
+
+function getUser(piwebapi) {
+    return new Promise(function (resolve, reject) {
+        piwebapi.system.cacheInstances().then(function (response) {
+            resolve(response.data.Items[0].User);
+        }, function (error) {
+            reject(error);
+        });
+    });
 }
 
 function submitResponse(piwebapi) {
@@ -84,7 +96,7 @@ function getLocAverage(piwebapi) {
         }
         piwebapi.eventFrame.getEventFramesQuery(dbId, null, "AnalysisName:'new status' Template:'New Entry' |Status:='Ready' |Room:=\'" + locName + '\'').then(function (response) {
             var allFrames = response.data.Items; //link, then values -- then another get on that?
-            if ((response.data.Items).length == 0) {
+            if ((allFrames).length == 0) {
                 reject("No entries for this location");
             }
             allFrames.forEach(function (element) {
@@ -102,6 +114,37 @@ function getLocAverage(piwebapi) {
 
         }, function (error) {
             reject(error);
+        });
+    });
+}
+
+function getUserVotes(piwebapi) {
+    var userEntries = [];
+    return new Promise(function (resolve, reject) {
+        getUser(piwebapi).then(function (user) {
+            console.log(user);
+            var search = ("AnalysisName:'new status' Template:'New Entry' |Status:='Ready' |ID:=\'*" + user.substring(user.indexOf("\\") + 1) + '\'')
+            console.log(search);
+            piwebapi.eventFrame.getEventFramesQuery(dbId, null, search).then(function (response) {
+                var allFrames = response.data.Items; //link, then values -- then another get on that?
+                console.log(allFrames);
+                if ((allFrames).length == 0) {
+                    reject("No entries for this user");
+                }
+                allFrames.forEach(function (element) {
+                    piwebapi.streamSet.getValues(element.WebId).then(function (response) {
+                        response.data.Items.forEach(function (element) { //iterate through all the attributes in each event frame
+                            userEntries += element;
+                        });
+                        resolve(userEntries);
+                    }, function (error) {
+                        reject(error);
+                    });
+                });
+
+            }, function (error) {
+                reject(error);
+            });
         });
     });
 }
