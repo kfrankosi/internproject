@@ -20,9 +20,13 @@ app.controller("mainCtrl", function ($scope, piwebapi) {
             console.log(error);
         });
 
-
-        getLocAverage(piwebapi, "VAVCO 2-04");
-
+        $scope.getAvg = function () {
+            getLocAverage(piwebapi).then(function (response) {
+                console.log(response);
+            }, function (error) {
+                console.log(error);
+            });
+        }
 
         $scope.changeFloor = function () {
             /* Fill dropdown menu with different vavcos -- later need to make them more user friendly
@@ -59,13 +63,6 @@ app.controller("mainCtrl", function ($scope, piwebapi) {
             console.log(error);
         });
 
-        $scope.addPoint = function (tagname, value) {
-            makePoint(piwebapi, tagname, value);
-        }
-        // }, function (error) {
-        //     console.log("get by path error");
-        //     console.log(error);
-        // });
     });
 
     $scope.submitResponse = function () {

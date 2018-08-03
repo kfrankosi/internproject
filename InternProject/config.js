@@ -69,18 +69,39 @@ function submitResponse(piwebapi) {
     var floorNum = document.getElementById("floorNumber").value; // can check using > 0
     var locName = document.getElementById("locationName").value; // can check using != '' --> don't need to check because will be valid if floorNum is
     var comfortLevel = document.getElementById("comfortLevel").value; // can check using != ''
-
-    var validInputs = (floorNum > 0) && (comfortLevel != '');
-
-    if (validInputs) {
+    
+    if ((floorNum > 0) && (comfortLevel != '')) {
         newUserEntry(piwebapi, locName, comfortLevel);
     }
 }
 
-function getLocAverage(piwebapi, locName) {
-    piwebapi.eventFrame.getEventFramesQuery(dbId, null, "AnalysisName:'new status' Template:'New Entry' |Status:='Ready' |Room:=\'" + locName + '\'').then(function (response) {
-        console.log(response.data.Items);
-    }, function (error) {
-        console.log(error);
+function getLocAverage(piwebapi) {
+    var locName = document.getElementById("locationName").value; // can check using != '' --> don't need to check because will be valid if floorNum is
+    var avg = 0;
+    return new Promise(function (resolve, reject) {
+        if (locName == '') {
+            reject("Invalid location");
+        }
+        piwebapi.eventFrame.getEventFramesQuery(dbId, null, "AnalysisName:'new status' Template:'New Entry' |Status:='Ready' |Room:=\'" + locName + '\'').then(function (response) {
+            var allFrames = response.data.Items; //link, then values -- then another get on that?
+            if ((response.data.Items).length == 0) {
+                reject("No entries for this location");
+            }
+            allFrames.forEach(function (element) {
+                piwebapi.streamSet.getValues(element.WebId).then(function (response) {
+                    response.data.Items.forEach(function (element) { //iterate through all the attributes in each event frame
+                        if (element.Name == "ComfortValue") {
+                            avg += element.Value.Value;
+                        }
+                    });
+                    resolve(avg / (response.data.Items).length);
+                }, function (error) {
+                    reject(error);
+                });
+            });
+
+        }, function (error) {
+            reject(error);
+        });
     });
 }
