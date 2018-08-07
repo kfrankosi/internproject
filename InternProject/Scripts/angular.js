@@ -3,7 +3,8 @@
  * (c) 2010-2018 Google, Inc. http://angularjs.org
  * License: MIT
  */
-(function(window) {'use strict';
+(function(window) {
+  'use strict';
 
 /* exported
   minErrConfig,

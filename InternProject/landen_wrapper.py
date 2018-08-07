@@ -84,20 +84,20 @@ class PI_server:
 
 
 def makePoint(tag, write_val):
-    my_PI_server = PI_server('PIKFRANK')
+    my_PI_server = PI_server('cb-oakpi4-af1')
     defaultVal = my_PI_server.read_current(tag)
     my_PI_server.write(tag, write_val, datetime.now())
     # resets tag value for end event frame trigger
     my_PI_server.write(tag, defaultVal, datetime.now())
 
+    # if __name__ == '__main__':
+    # '''
+    # this is a test to make sure things work on your computer; you need to put in the server name and a tag name
+    # if you run this script, it will execute this code, however if you import this file, it will ignore this block
+    # '''
+    
 
-    if __name__ == '__main__':
-    '''
-    this is a test to make sure things work on your computer; you need to put in the server name and a tag name
-    if you run this script, it will execute this code, however if you import this file, it will ignore this block
-    '''
-
-    my_PI_server = PI_server('PIKFRANK')  # put your server name here
+    my_PI_server = PI_server('cb-oakpi4-af1')  # put your server name here
 
     # def write(tagname, write_value, write_timestamp=None):
     #     # if you need write funcitonality, here is the syntax:
@@ -141,5 +141,4 @@ def makePoint(tag, write_val):
     print
 
     # my_PI_server.write(tagname, "Default", datetime.now())
-
-my_PI_server = PI_server('PIKFRANK')  # put your server name here
+makePoint("Status", "testing")

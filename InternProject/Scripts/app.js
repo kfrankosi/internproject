@@ -1,5 +1,4 @@
 //Make sure the name below is the same declared on  <html ng-app="PiWebApiSampleApp">  
-
 let baseUrl = "https://pikfrank.osisoft.int/piwebapi";
 var app = angular.module(ngAppName, ['ngPIWebApi']);
 
@@ -21,63 +20,90 @@ app.controller("mainCtrl", function ($scope, piwebapi) {
             console.log(error.data);
         });
 
-        $scope.getUserEntries = function () {
-            getUserVotes(piwebapi).then(function (response) {
-                console.log(response);
-            }, function (error) {
-                console.log(error.data);
-            });
-        }
-
-        var rootPathId, elementTemplateId;
-        piwebapi.assetDatabase.getEventFrames(dbId).then(
-            function (response) {
-                console.log(rootIdPath = response.data.Items[0].WebId);
-                // console.log(rootPathId);
-                piwebapi.eventFrame.getEventFrames(rootIdPath).then(
-                    function (response) {
-                        console.log(elementTemplateId = response.data.WebId);
-                        var query = "AnalysisName:\"new status\" Template:\"New Entry\" |Status:=\"Ready\" |Room:=\"VAVCO 1-01\"";
-                        query = [
-                            new PIWebApiClient.PIValueQuery("Status", null, "Ready", "Equal"),
-                            new PIWebApiClient.PIValueQuery("Room", null, "VAVCO*", "Equal")
-                        ];
-                        var piQuery = new PIWebApiClient.PISearchByAttribute(/*id of root event frame*/rootPathId,
-                            "F1ETZErvcQ4i_kaeZo0kfGe5aQcE7dgFtyLEaY1FhPnhk8mQUElLRlJBTktcSU5URVJOUFJPSkVDVFxFTEVNRU5UVEVNUExBVEVTW05FVyBFTlRSWV0"
-                            , null, query);
-                        piwebapi.eventFrame.createSearchByAttribute(piQuery).then(
-                            function (response) {
-                                console.log(response);
-                            }, function (error) {
-                                console.log(error.data.Errors);
-                            }
-                        );
-                    }, function (error) {
-                        console.log(error.data);
-                    }
-                );
-
-            }, function (error) {
-                console.log(error.data.Errors);
-            });
-
-
-
-
-        // piwebapi.eventFrame.executeSearchByAttribute()
-
+        // $scope.getUserEntries = function () {
+        //     // getUserVotes(piwebapi);
+        //     getUser(piwebapi).then(function (user) {
+        //         eventFrameQuery(piwebapi, "AnalysisName:\"new status\" Template:\"New Entry\" |Status:=\"Ready\" |ID:=\"*" + user.substring(user.indexOf("\\") + 1) + '\"',
+        //             "No user entries").then(
+        //                 function (response) {
+        //                     // console.log(response);
+        //                 }, function (error) {
+        //                     console.log(error);
+        //                 });
+        //     });
+        // }
 
         $scope.getAvg = function () {
-            // must be a way to do this more robustly
+            var locationName = document.getElementById("locationName").value;
+            eventFrameQuery(piwebapi, "AnalysisName:\"new status\" Template:\"New Entry\" |Status:=\"Ready\" |Room:=\"" + locationName,
+                "No vote entries").then(
+                    function (response) {
+                        // console.log(response);
+                        var allComfortVals = [];
+                        response.forEach(function (obj) {
+                            if (obj.Name == 'ComfortValue')
+                                allComfortVals.push(obj);
 
-            // get all relevant event frames
-            // iterate through to collect all comfort values and then manually divide to take the average
+                        });
+                        console.log(allComfortVals);
+                    }, function (error) {
+                        console.log(error);
+                    });
 
-            // getLocAverage(piwebapi).then(function (response) {
-            //     console.log(response);
-            // }, function (error) {
-            //     console.log(error.data);
-            // });
+
+            //     console.log("avg")
+
+            //     var rootPathId, elementTemplateId;
+            //     piwebapi.assetDatabase.getEventFrames(dbId).then(
+            //         function (response) {
+            //             try {
+            //                 console.log(response)
+            //                 console.log(rootPathId = response.data.Items[0].WebId);
+            //             }
+            //             catch (exception) {
+            //                 console.log(exception);
+            //             }
+            //             piwebapi.assetDatabase.getElementTemplates(dbId, 'Name').then(
+            //                 function (response) {
+            //                     (response.data.Items).forEach(function (obj) {
+            //                         if (obj.Name == 'New Entry') {
+            //                             elementTemplateId = obj.WebId;
+            //                         }
+            //                     });
+            //                     // console.log(elementTemplateId = response.data.WebId);
+            //                     // var query = "AnalysisName:\"new status\" Template:\"New Entry\" |Status:=\"Ready\" |Room:=\"" + locationName + "\"";
+            //                     var query = [
+            //                         new PIWebApiClient.PIValueQuery("Status", null, "Ready", "Equal"),
+            //                         new PIWebApiClient.PIValueQuery("Room", null, "VAVCO*", "Equal")
+            //                     ];
+
+            //                     var piQuery = new PIWebApiClient.PISearchByAttribute(
+            //                         /*id of root event frame*/rootPathId,
+            //                         // /*element template*/ "F1ETZErvcQ4i_kaeZo0kfGe5aQcE7dgFtyLEaY1FhPnhk8mQUElLRlJBTktcSU5URVJOUFJPSkVDVFxFTEVNRU5UVEVNUExBVEVTW05FVyBFTlRSWV0"
+            //                         elementTemplateId
+            //                         , null, query);
+
+            //                     piwebapi.eventFrame.createSearchByAttribute(piQuery).then(
+            //                         function (response) {
+            //                             console.log(piQuery);
+            //                             var locHeaderVal = 'H4sIAAAAAAAEAIWRT08CMRDFv0uPxsNu-CPhxrotgbAs7baDYIyppS7YLotLV0DCd7dg4kWih8lL5s28_DJzRJmWlVqysnSoi0hIijmuPhRtrp6N1PMyMK993ZK003Q0GGjZjvqN2a63aIzUekMFtiNmhxE3TmWiJRgMU0GGk8xADGRPwEAKeJ5RERIRupSBykXIIiDAB_Fgl_DcJfG5VJ5w2k7ecDuJTT3-VM0Him4RtrrQa8d1sbHS6Qsi5tcRFb5b5MQdRljOQrKcrJemU_yLyDGMme-DV4H3kVc-DVoEDhHhlmVTCDwHSFtrWutqpbeo-3hEPeeq1Uvt9FgWZ6zMSVdv_eSPcVnxDtNycfDG96HTja6kKytv4PdaWnS6_R3mv1Fci4Ie3Kc3f2Q9nb4AcpXhHNEBAAA';
+            //                             piwebapi.eventFrame.executeSearchByAttribute(locHeaderVal).then(
+            //                                 function (response) {
+            //                                     console.log(response);
+            //                                 }, function (error) {
+            //                                     console.log(error.data);
+            //                                 });
+            //                         }, function (error) {
+            //                             console.log(error.data.Errors);
+            //                         }
+            //                     );
+            //                 }, function (error) {
+            //                     console.log(error.data);
+            //                 });
+
+            //         }, function (error) {
+            //             console.log(error.data.Errors);
+            //         });
         }
 
         $scope.changeFloor = function () {
@@ -131,3 +157,5 @@ for (var i = 1; i <= 6; i++) {
     opt.innerHTML = i;
     select.appendChild(opt);
 }
+
+
