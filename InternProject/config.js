@@ -1,6 +1,6 @@
 let ngAppName = "WebApiApp";
 let serverId = "F1DSPriJQMfiM0mIGCBz973bBAUElLRlJBTks";
-var dbId, webId;
+var dbId, webId, user;
 
 // returns a promise that holds the dataserver Object -- can manipulate it in other areas of code
 function getVars(piwebapi) {
@@ -13,7 +13,7 @@ function getVars(piwebapi) {
 
 function getAllElements(piwebapi) {
     return new Promise(function (resolve, reject) {
-        resolve(piwebapi.assetDatabase.getElements(dbId, null, null, null, null, null, true));
+        resolve(piwebapi.assetDatabase.getElements(dbId, null, null, null, null, null, true, [],null,null,null,"VAVCO"));
     });
 }
 
@@ -73,13 +73,19 @@ function newUserEntry(piwebapi, locName, comfortLevel) {
 }
 
 function getUser(piwebapi) {
-    return new Promise(function (resolve, reject) {
-        piwebapi.system.cacheInstances().then(function (response) {
-            resolve(response.data.Items[0].User);
-        }, function (error) {
-            reject(error);
+    if (user != undefined) {
+        return new Promise(function (resolve) {
+            resolve(user);
         });
-    });
+    } else {
+        return new Promise(function (resolve, reject) {
+            piwebapi.system.cacheInstances().then(function (response) {
+                resolve(user = response.data.Items[0].User);
+            }, function (error) {
+                reject(error);
+            });
+        });
+    }
 }
 
 function submitResponse(piwebapi) {
@@ -104,6 +110,7 @@ function getLocAverage(piwebapi) {
             if ((allFrames).length == 0) {
                 reject("No entries for this location");
             }
+            console.log(allFrames);
             allFrames.forEach(function (element) {
                 piwebapi.streamSet.getValues(element.WebId).then(function (response) {
                     response.data.Items.forEach(function (element) { //iterate through all the attributes in each event frame
@@ -151,7 +158,6 @@ function eventFrameQuery(piwebapi, search, errorMsg) {
                     reject(error);
                 });
             });
-            // resolve(relevantEntries);
         }, function (error) {
             reject(error);
         });

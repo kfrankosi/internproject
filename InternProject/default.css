@@ -19,9 +19,9 @@ input {
     border: 1px solid #666;
 }
 
-input[type=radio], input[type=checkbox], input[type=submit], input[type=reset], input[type=button], input[type=image] {
+/* input[type=radio], input[type=checkbox], input[type=submit], input[type=reset], input[type=button], input[type=image] {
     width: auto;
-}
+} */
 
 #map {
     width: 100%;
@@ -114,9 +114,10 @@ img {
 }
 
 .square {
-    background-color: red;
+    border: dashed;
+    border-color: blue;
     position: fixed;
-    opacity: 0.6;
+    /* opacity: 0.6; */
     overflow: visible;
 }
 
@@ -139,19 +140,19 @@ img {
 .square1 {
     width: 12vw;
     left: 4vw;
-    background-color: orange;
+    /* background-color: orange; */
 }
 
 .square2 {
     width: 29vw;
     left: 16vw;
-    background-color: yellow;
+    /* background-color: yellow; */
 }
 
 #squareRoom {
     width: 6vw;
     left: 45vw;
-    background-color: blue;
+    /* background-color: blue; */
 }
 
 .square4 {
@@ -164,13 +165,13 @@ img {
     /* background-color: blue; */
     left: 71vw;
     width: 9vw;
-    background-color: orange;
+    /* background-color: orange; */
 }
 
 .square6 {
     left: 80vw;
     width: 12vw;
-    background-color: green;
+    /* background-color: green; */
 }
 
 .square7 {
@@ -202,10 +203,10 @@ img {
 }
 
 .vavLabel {
-    position: absolute;
+    /* position: absolute; */
     z-index: 10;
-    font-size: 100px;
-    align-content: center;
+    font-size: 30px;
+    background-color: gray;
 }
 
 .inputBox {
@@ -220,8 +221,12 @@ img {
     display: inline-block;
     position: absolute;
     z-index: 100;
-    margin-top: 30px;
-    margin-left: 440px;
+    /* margin-top: 830px; */
+    bottom: 1%;
+    margin-left: 12%;
+    background-color: blue;
+    color: white;
+    padding: 10px;
 }
 
 #locationName {
@@ -236,4 +241,29 @@ label {
     position: relative;
     font-size: 20px;
     /* padding-left: 80px; */
+}
+
+#desks {
+    left: 27vw;
+    width: 17vw;
+}
+
+#bottomLeft {
+    width: 11vw;
+    /* background-color: gray; */
+}
+
+#desksRight {
+    left: 55vw;
+    width: 16vw;
+}
+
+#section14 {
+    width: 5vw;
+    left: 44vw;
+}
+
+#section13 {
+    left: 49vw;
+    width: 6vw;
 }
