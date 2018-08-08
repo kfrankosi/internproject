@@ -9,12 +9,14 @@
     <title>PI Web API Sample App with AngularJS</title>
     <!--The file below was copied from the blog post sample app using jQuery to style the DOM elements-->
     <link href="default.css" rel="stylesheet" />
+    <link rel="stylesheet " href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css ">
 </head>
 
 <!--The mainContrl is our main AngularJS controller-->
 <!--Variables declared within $scope will manipulate the DOM within the body node-->
 
 <body ng-controller="mainCtrl">
+
     <!-- <div ng-show="showMap == true" id="overlay"> -->
     <!-- <img src="Floorplan.jpg"> -->
     <!-- <div id="floating-panel" class="overlay">
@@ -22,28 +24,111 @@
         <input type="button" value="Toggle DOM attachment" onclick="overlay.toggleDOM();"></input>
     </div> -->
     <!-- </div> -->
-    <div id="userInput" class="parentBox">
-        <label for="floorNumber">Floor Number</label>
-        <select name="floorNumber" id="floorNumber" class="inputBox" ng-change="changeFloor()" ng-model="testModel">
-        </select>
+    <!-- Trigger the modal with a button -->
+    <!-- <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal">Select Floor</button> -->
 
-        <label for="locationName">Location</label>
-        <select name="locationName" id="locationName" class="inputBox">
-            <option></option>
-            <option>Select a floor</option>
-        </select>
+    <!-- Modal -->
+    <div id="myModal" class="modal fade" role="dialog" style="position: fixed">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Select Floor Number</h4>
+                </div>
+                <div class="modal-body">
+                    <!-- <select name="floorNumber" id="floorNumber" class="inputBox" ng-model="testModel">
+                    </select> -->
+
+                    <!-- <select name="comfortLevel" id="comfortLevel" class="inputBox">
+                        <option></option>
+                        <option>Cold</option>
+                        <option>Normal</option>
+                        <option>Hot</option>
+                    </select> -->
+
+
+                    <div class="dropdown" style="visibility:hidden; position:fixed">
+                        <button class="btn btn-secondary dropdown-toggle" type="button" id="floorNumberButton" data-toggle="dropdown" aria-haspopup="true"
+                            aria-expanded="false">
+                            Floor Number
+                        </button>
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" id="floorNumber">
+                            <!-- <li>
+                                <a class="dropdown-item" href="">Cold</a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="#">Normal</a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="#">Hot</a>
+                            </li> -->
+                        </div>
+                    </div>
+
+                    <div class="dropdown">
+                        <button id="comfortLevel" class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown"
+                            aria-haspopup="true" aria-expanded="false">
+                            Comfort Level
+                        </button>
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                            <li>
+                                <a class="dropdown-item" href="">Cold</a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="#">Normal</a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="#">Hot</a>
+                            </li>
+                        </div>
+                    </div>
+
+                    <div class="dropdown">
+                        <button id="locationNameButton" class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown"
+                            aria-haspopup="true" aria-expanded="false">
+                            Location
+                        </button>
+                        <div id="locationName" class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+
+                        </div>
+                    </div>
+
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="changeFloor()">Select</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+
+    <div id="userInput" class="parentBox">
+        <!-- <label for="floorNumber">Floor Number</label>
+        <select name="floorNumber" id="floorNumber" class="inputBox" ng-change="changeFloor()" ng-model="testModel">
+        </select> -->
+
+        <!-- <div id="locationName"></div> -->
+        <!-- <label for="locationName">Location</label> -->
+        <!-- <select name="locationName" id="locationName" class="inputBox"> -->
+        <!-- <option></option>
+            <option>Select a floor</option> -->
+        <!-- </select> -->
 
         <!-- Potentially change to be a sliding bar instead -->
-        <label for="comfortLevel">Comfort Level</label>
-        <select name="comfortLevel" id="comfortLevel" class="inputBox">
+        <!-- <label for="comfortLevel">Comfort Level</label> -->
+        <!-- <select name="comfortLevel" id="comfortLevel" class="inputBox">
             <option></option>
             <option>Cold</option>
             <option>Normal</option>
             <option>Hot</option>
-        </select>
+        </select> -->
 
-        <input type="submit" id="getButton" value="Get Average" ng-click="getAvg()">
-        <input type="submit" id="submitButton" ng-click="submitResponse()">
+        <!-- <input type="submit" id="getButton" value="Get Average" ng-click="getAvg(); getUserEntries()">
+        <input type="submit" id="submitButton" ng-click="submitResponse()"> -->
     </div>
 
     <!-- Div that has the map appearing -->
@@ -55,91 +140,91 @@
         </div> -->
         <!-- Insert floor layout -->
         <div id="floorplan">
-            <img src="Floorplan.jpg">
+            <img src="Floorplan.jpg" style="top:5vh">
         </div>
         <div id="floorplan_child">
-            <div id="" class="square1 room square square_top">
-                <div class="vavLabel">04</div>
+            <div id="" class="square1 room square square_top" ng-click="clickLocation(4)">
+                <div class="vavLabel">4</div>
             </div>
-            <div id="" class="square2 room square square_top" content="width=device-width, initial-scale=1">
-                <div class="vavLabel">05</div>
+            <div id="" class="square2 room square square_top" ng-click="clickLocation(5)">
+                <div class="vavLabel">5</div>
             </div>
-            <div id="squareRoom" class="room square square_top" content="width=device-width, initial-scale=1">
+            <div id="squareRoom" class="room square square_top" ng-click="clickLocation(17)">
                 <div class="vavLabel">17</div>
             </div>
-            <div id="" class="square4 room square square_top" content="width=device-width, initial-scale=1">
-                <div class="vavLabel">06</div>
+            <div id="" class="square4 room square square_top" ng-click="clickLocation(6)">
+                <div class="vavLabel">6</div>
             </div>
-            <div id="" class="square5 room square square_top" content="width=device-width, initial-scale=1">
-                <div class="vavLabel">07/08</div>
+            <div id="" class="square5 room square square_top" ng-click="clickLocation(7)">
+                <div class="vavLabel">7</div>
             </div>
-            <div id="" class="square6 room square square_top" content="width=device-width, initial-scale=1">
-                <div class="vavLabel">01</div>
+            <div id="" class="square6 room square square_top" ng-click="clickLocation(1)">
+                <div class="vavLabel">1</div>
             </div>
 
-            <div id="" class="square1 room square square_middle middleExtend">
-                <div class="vavLabel">04</div>
+            <div id="" class="square1 room square square_middle middleExtend" ng-click="clickLocation(4)">
+                <div class="vavLabel">4</div>
             </div>
-            <!-- <div id="stairs" class="square2 room square square_middle" content="width=device-width, initial-scale=1"></div> -->
-            <div id="conf" class="square4 room square square_middle" content="width=device-width, initial-scale=1">
+            <!-- <div id="stairs" class="square2 room square square_middle" > ></div> -->
+            <div id="conf" class="square4 room square square_middle" ng-click="clickLocation(18)">
                 <div class="vavLabel">18</div>
             </div>
-            <div id="medRoom" class="square5 room square square_middle" content="width=device-width, initial-scale=1">
-                <div class="vavLabel">09/10</div>
+            <div id="medRoom" class="square5 room square square_middle" ng-click="clickLocation(9)">
+                <div class="vavLabel">9</div>
             </div>
-            <div id="" class="square6 room square square_middle" content="width=device-width, initial-scale=1">
-                <div class="vavLabel">01</div>
+            <div id="" class="square6 room square square_middle" ng-click="clickLocation(1)">
+                <div class="vavLabel">1</div>
             </div>
 
-            <div id="" class="square1 room square square_bottom">
-                <div class="vavLabel">04</div>
+            <div id="" class="square1 room square square_bottom" ng-click="clickLocation(4)">
+                <div class="vavLabel">4</div>
             </div>
-            <div id="desks" class="square2 room square square_bottom" content="width=device-width, initial-scale=1">
+            <div id="desks" class="square2 room square square_bottom" ng-click="clickLocation(3)">
                 <div class="vavLabel">3</div>
             </div>
-            <div id="desksRight" class="square4 room square square_bottom" content="width=device-width, initial-scale=1">
+            <div id="desksRight" class="square4 room square square_bottom" ng-click="clickLocation(2)">
                 <div class="vavLabel">2</div>
 
             </div>
-            <div id="section14" class="square4 room square square_bottom" content="width=device-width, initial-scale=1">
-                <div class="vavLabel">14</div>
+            <div id="section14" class="square4 room square square_bottom" ng-click="clickLocation(14)">
+                <div class=" vavLabel ">14</div>
             </div>
-            <div id="section13" class="square4 room square square_bottom" content="width=device-width, initial-scale=1">
-                <div class="vavLabel">13</div>
-
+            <div id="section13 " class="square4 room square square_bottom " ng-click="clickLocation(13)">
+                <div class="vavLabel ">13</div>
             </div>
-            <div id="bottomLeft" class="square2 room square square_bottom" content="width=device-width, initial-scale=1">
-                <div class="vavLabel">15/16</div>
-
+            <div id="bottomLeft " class="square2 room square square_bottom " ng-click="clickLocation(15)">
+                <div class="vavLabel ">15</div>
             </div>
-            <div id="" class="square5 room square square_bottom" content="width=device-width, initial-scale=1">
-                <div class="vavLabel">11/12</div>
+            <div id=" " class="square5 room square square_bottom " ng-click="clickLocation(11)">
+                <div class="vavLabel ">11</div>
             </div>
-            <div id="" class="square6 room square square_bottom" content="width=device-width, initial-scale=1">
-                <div class="vavLabel">01</div>
+            <div id=" " class="square6 room square square_bottom " ng-click="clickLocation(1)">
+                <div class="vavLabel ">1</div>
             </div>
 
         </div>
     </div>
 
-    <div ng-show="showMap == true" id="map">
-        <!-- <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD3tl-i_Mg8Z7uEIT82ElNO7vT1mbTx6hI&callback=renderMap" defer></script> -->
+    <div ng-show="showMap==true " id="map ">
+        <!-- <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD3tl-i_Mg8Z7uEIT82ElNO7vT1mbTx6hI&callback=renderMap " defer></script> -->
     </div>
 
     <!--The div below will appear only if $scope.requestMode == true-->
     <!-- Set to == true to see boxes from initial web app -->
 
 
-    <script src="Scripts/angular.min.js"></script>
-    <!-- <script src="dist/jquery-piwebapi-1.11.0.min.js"></script>
-    <script src="dist/jquery-piwebapi-1.11.0.js"></script> -->
-    <script src="Scripts/app.js"></script>
-    <!-- <script src="Scripts/piwebapi.js"></script> -->
-    <!-- <script src="Scripts/sample_main.js"></script> -->
-    <script src="Scripts/angular-base64.js"></script>
-    <!-- <script src="Scripts/angular-base64.min.js"></script> -->
-    <script src="Scripts/angular-piwebapi-1.11.0.js"></script>
-    <!-- <script src="Scripts/angular-piwebapi-1.11.0.min.js"></script> -->
+    <script src="Scripts/angular.min.js "></script>
+    <!-- <script src="dist/jquery-piwebapi-1.11.0.min.js "></script>
+    <script src="dist/jquery-piwebapi-1.11.0.js "></script> -->
+    <script src="Scripts/app.js "></script>
+    <!-- <script src="Scripts/piwebapi.js "></script> -->
+    <!-- <script src="Scripts/sample_main.js "></script> -->
+    <script src="Scripts/angular-base64.js "></script>
+    <!-- <script src="Scripts/angular-base64.min.js "></script> -->
+    <script src="Scripts/angular-piwebapi-1.11.0.js "></script>
+    <!-- <script src="Scripts/angular-piwebapi-1.11.0.min.js "></script> -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js "></script>
+
 
 </body>
 

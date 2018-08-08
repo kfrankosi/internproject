@@ -58,9 +58,9 @@ html, body {
 .dropdown {
     position: fixed;
     display: inline-block;
-    padding: 45%;
-    padding-top: 40%;
-    padding-left: 50%;
+    /* padding: 45%; */
+    /* padding-top: 40%;
+    padding-left: 50%; */
 }
 
 /* Dropdown Content (Hidden by Default) */
@@ -119,21 +119,22 @@ img {
     position: fixed;
     /* opacity: 0.6; */
     overflow: visible;
+    /* margin-top: 2%; */
 }
 
 .square_top {
-    top: 4vh;
+    top: 8vh;
     height: 22.8vh;
 }
 
 .square_middle {
     height: 26.8vh;
-    top: 27vh;
+    top: 30vh;
     width: 2vw;
 }
 
 .square_bottom {
-    bottom: 23vh;
+    bottom: 21vh;
     height: 23vh;
 }
 
@@ -207,6 +208,7 @@ img {
     z-index: 10;
     font-size: 30px;
     background-color: gray;
+    visibility: hidden;
 }
 
 .inputBox {
@@ -214,7 +216,8 @@ img {
     position: relative;
     z-index: 100;
     padding-top: 5px;
-    display: inline-block;
+    /* display: inline-block; */
+    display: none;
 }
 
 .parentBox {
@@ -224,14 +227,14 @@ img {
     /* margin-top: 830px; */
     bottom: 1%;
     margin-left: 12%;
-    background-color: blue;
+    /* background-color: blue; */
     color: white;
     padding: 10px;
 }
 
-#locationName {
-    position: relative;
-}
+/* #locationName {
+    display: none;
+} */
 
 #comfortLevel {
     position: relative;
@@ -266,4 +269,9 @@ label {
 #section13 {
     left: 49vw;
     width: 6vw;
+}
+
+#dropdownItem {
+    white-space: pre;
+    color: red;
 }

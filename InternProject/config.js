@@ -1,6 +1,6 @@
 let ngAppName = "WebApiApp";
 let serverId = "F1DSPriJQMfiM0mIGCBz973bBAUElLRlJBTks";
-var dbId, webId, user;
+var dbId, webId, user, locName, floorNum;
 
 // returns a promise that holds the dataserver Object -- can manipulate it in other areas of code
 function getVars(piwebapi) {
@@ -23,7 +23,6 @@ function makePoint(piwebapi, tagname, value) {
     val.Timestamp = ("*");
     val.Value = (value);
     return new Promise(function (resolve, reject) {
-        // resolve(
         piwebapi.attribute.getByPath("\\\\PIKFRANK\\internproject\\Entry|" + tagname).then(function (response) {
             piwebapi.stream.updateValue(response.data.WebId, val, null, null, null, null).then(function (response) {
                 resolve(response);
@@ -32,7 +31,6 @@ function makePoint(piwebapi, tagname, value) {
                 console.log(error);
             });
         });
-        // );
     });
 }
 
@@ -90,7 +88,7 @@ function getUser(piwebapi) {
 
 function submitResponse(piwebapi) {
     var floorNum = document.getElementById("floorNumber").value; // can check using > 0
-    var locName = document.getElementById("locationName").value; // can check using != '' --> don't need to check because will be valid if floorNum is
+    // var locName = document.getElementById("locationName").value; // can check using != '' --> don't need to check because will be valid if floorNum is
     var comfortLevel = document.getElementById("comfortLevel").value; // can check using != ''
 
     if ((floorNum > 0) && (comfortLevel != '')) {
@@ -134,17 +132,6 @@ function getLocAverage(piwebapi) {
 // very slow
 function eventFrameQuery(piwebapi, search, errorMsg) {
     console.log("event frame query");
-    var relevantEntries = [];
-
-    // var eventFramesReq = new PIWebApiClient.PIRequest();
-    // var streamValuesReq = new PIWebApiClient.PIRequest();
-
-    // eventFramesReq.setMethod('GET');
-    // streamValuesReq.setMethod('GET');
-
-    // eventFramesReq.setResource(baseUrl+"eventframes/search");
-    // streamValuesReq.setResource(baseUrl+"eventframes/search");
-
     var counter = 0;
     //working non batch request
     return new Promise(function (resolve, reject) {
@@ -154,10 +141,7 @@ function eventFrameQuery(piwebapi, search, errorMsg) {
             if ((allFrames).length == 0) {
                 reject(errorMsg = (errorMsg == '') ? 'No event frames' : errorMsg);
             }
-            var allFramesProcessed = 1;
             allFrames.forEach(function (element) {
-                var valueFramesProcessed = 1;
-
                 pirequests[counter++] = {
                     "Method": "GET",
                     "Resource": baseUrl + "streamsets/" + element.WebId + "/value",
@@ -167,16 +151,16 @@ function eventFrameQuery(piwebapi, search, errorMsg) {
                     }
                 };
             });
-            
             piwebapi.batch.execute(pirequests).then(function (response) {
-                console.log(response);
+                resolve(response.data);
             }, function (error) {
                 console.log(error);
             });
-           
+
         }, function (error) {
             reject(error);
         });
 
     });
 }
+
