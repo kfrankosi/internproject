@@ -35,7 +35,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h4 class="modal-title">Select Floor Number</h4>
+                    <h4 class="modal-title">Select Floor Number and Comfort</h4>
                 </div>
                 <div class="modal-body">
                     <!-- <select name="floorNumber" id="floorNumber" class="inputBox" ng-model="testModel">
@@ -98,12 +98,53 @@
 
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="submitResponse()">Select</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="submitResponse()">Submit</button>
                 </div>
             </div>
 
         </div>
     </div>
+
+
+
+    <div id="successModal" class="modal fade" role="dialog" style="position: fixed">
+        <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Success</h4>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="errorModal" class="modal fade" role="dialog" style="position: fixed">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">There was a problem submitting your response</h4>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="invalidClickModal" class="modal fade" role="dialog" style="position: fixed">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Sorry, this part of the map doesn't have a thermostat</h4>
+                </div>
+            </div>
+        </div>
+    </div>
+
 
 
     <div id="userInput" class="parentBox">
@@ -143,62 +184,61 @@
             <img src="Floorplan.jpg" style="top:5vh">
         </div>
         <div id="floorplan_child">
-            <div id="" class="square1 room square square_top" ng-click="clickLocation(4)">
+            <div id="" class="square1 room square square_top 4" ng-click="clickLocation(4, $event)">
                 <div class="vavLabel">4</div>
             </div>
-            <div id="" class="square2 room square square_top" ng-click="clickLocation(5)">
+            <div id="" class="square2 room square square_top 5" ng-click="clickLocation(5, $event)">
                 <div class="vavLabel">5</div>
             </div>
-            <div id="squareRoom" class="room square square_top" ng-click="clickLocation(17)">
+            <div id="squareRoom" class="room square square_top 17" ng-click="clickLocation(17, $event)">
                 <div class="vavLabel">17</div>
             </div>
-            <div id="" class="square4 room square square_top" ng-click="clickLocation(6)">
+            <div id="" class="square4 room square square_top 6" ng-click="clickLocation(6, $event)">
                 <div class="vavLabel">6</div>
             </div>
-            <div id="" class="square5 room square square_top" ng-click="clickLocation(7)">
+            <div id="" class="square5 room square square_top 7" ng-click="clickLocation(7, $event)">
                 <div class="vavLabel">7</div>
             </div>
-            <div id="" class="square6 room square square_top" ng-click="clickLocation(1)">
+            <div id="" class="square6 room square square_top 1" ng-click="clickLocation(1, $event)">
                 <div class="vavLabel">1</div>
             </div>
 
-            <div id="" class="square1 room square square_middle middleExtend" ng-click="clickLocation(4)">
+            <div id="" class="square1 room square square_middle middleExtend 4" ng-click="clickLocation(4, $event)">
                 <div class="vavLabel">4</div>
             </div>
             <!-- <div id="stairs" class="square2 room square square_middle" > ></div> -->
-            <div id="conf" class="square4 room square square_middle" ng-click="clickLocation(18)">
+            <div id="conf" class="square4 room square square_middle 18" ng-click="clickLocation(18, $event)">
                 <div class="vavLabel">18</div>
             </div>
-            <div id="medRoom" class="square5 room square square_middle" ng-click="clickLocation(9)">
+            <div id="medRoom" class="square5 room square square_middle 9" ng-click="clickLocation(9, $event)">
                 <div class="vavLabel">9</div>
             </div>
-            <div id="" class="square6 room square square_middle" ng-click="clickLocation(1)">
+            <div id="" class="square6 room square square_middle 1" ng-click="clickLocation(1, $event)">
                 <div class="vavLabel">1</div>
             </div>
 
-            <div id="" class="square1 room square square_bottom" ng-click="clickLocation(4)">
+            <div id="" class="square1 room square square_bottom 4" ng-click="clickLocation(4, $event)">
                 <div class="vavLabel">4</div>
             </div>
-            <div id="desks" class="square2 room square square_bottom" ng-click="clickLocation(3)">
+            <div id="desks" class="square2 room square square_bottom 3" ng-click="clickLocation(3, $event)">
                 <div class="vavLabel">3</div>
             </div>
-            <div id="desksRight" class="square4 room square square_bottom" ng-click="clickLocation(2)">
+            <div id="desksRight" class="square4 room square square_bottom 2" ng-click="clickLocation(2, $event)">
                 <div class="vavLabel">2</div>
-
             </div>
-            <div id="section14" class="square4 room square square_bottom" ng-click="clickLocation(14)">
+            <div id="section14" class="square4 room square square_bottom 14" ng-click="clickLocation(14,$event)">
                 <div class=" vavLabel ">14</div>
             </div>
-            <div id="section13 " class="square4 room square square_bottom " ng-click="clickLocation(13)">
+            <div id="section13 " class="square4 room square square_bottom 13" ng-click="clickLocation(13,$event)">
                 <div class="vavLabel ">13</div>
             </div>
-            <div id="bottomLeft " class="square2 room square square_bottom " ng-click="clickLocation(15)">
+            <div id="bottomLeft " class="square2 room square square_bottom 15" ng-click="clickLocation(15,$event)">
                 <div class="vavLabel ">15</div>
             </div>
-            <div id=" " class="square5 room square square_bottom " ng-click="clickLocation(11)">
+            <div id=" " class="square5 room square square_bottom 11" ng-click="clickLocation(1, $event)">
                 <div class="vavLabel ">11</div>
             </div>
-            <div id=" " class="square6 room square square_bottom " ng-click="clickLocation(1)">
+            <div id=" " class="square6 room square square_bottom 1" ng-click="clickLocation(1, $event)">
                 <div class="vavLabel ">1</div>
             </div>
 

@@ -1,6 +1,6 @@
 let ngAppName = "WebApiApp";
 let serverId = "F1DSPriJQMfiM0mIGCBz973bBAUElLRlJBTks";
-var dbId, webId, user, locName, floorNum;
+var dbId, webId, user, locName, floorNum, currentSquare;
 
 // returns a promise that holds the dataserver Object -- can manipulate it in other areas of code
 function getVars(piwebapi) {
@@ -35,7 +35,6 @@ function makePoint(piwebapi, tagname, value) {
 
 
 function newUserEntry(piwebapi, locName, comfortLevel) {
-    console.log("new user entry");
     switch (comfortLevel) {
         case "Cold":
             comfortLevel = -1;
@@ -48,24 +47,31 @@ function newUserEntry(piwebapi, locName, comfortLevel) {
             break;
     }
 
-    // change status to gathering info while gathering info
-    // then change status to ready to trigger the event frame
-    // then change status to waiting to end event frame and wait for another entry
+    return new Promise(function (resolve, reject) {
 
-    // change tag to begin gathering data (have to change so it can be triggered by another change later)
-    makePoint(piwebapi, "Status", "Gathering Info")
-        .then(function () {
-            getUser(piwebapi).then(function (user) {
-                makePoint(piwebapi, "ID", user);
+        // change status to gathering info while gathering info
+        // then change status to ready to trigger the event frame
+        // then change status to waiting to end event frame and wait for another entry
+
+        // change tag to begin gathering data (have to change so it can be triggered by another change later)
+        makePoint(piwebapi, "Status", "Gathering Info")
+            .then(function () {
+                getUser(piwebapi).then(function (user) {
+                    makePoint(piwebapi, "ID", user);
+                });
+                makePoint(piwebapi, "Room", locName);
+                makePoint(piwebapi, "ComfortValue", comfortLevel); // need to convert to int value
+            })
+            // change status tag last to trigger a new event frame that will capture the above changed info
+            .then(makePoint(piwebapi, "Status", "Ready"))
+            // change status tag to waiting until another entry is made -- ends ready event frame but does not trigger a new one
+            .then(makePoint(piwebapi, "Status", "Waiting"))
+            .then(function (response) {
+                resolve(response);
+            }, function (error) {
+                reject(error);
             });
-            makePoint(piwebapi, "Room", locName);
-            makePoint(piwebapi, "ComfortValue", comfortLevel); // need to convert to int value
-        })
-        // change status tag last to trigger a new event frame that will capture the above changed info
-        .then(makePoint(piwebapi, "Status", "Ready"))
-        // change status tag to waiting until another entry is made -- ends ready event frame but does not trigger a new one
-        .then(makePoint(piwebapi, "Status", "Waiting"));
-
+    });
 }
 
 function getUser(piwebapi) {
@@ -85,15 +91,31 @@ function getUser(piwebapi) {
 }
 
 function submitResponse(piwebapi) {
-    // var floorNum = document.getElementById("floorNumber").value; // can check using > 0
+    var floorNum = $("#floorNumberButton").text(); // can check using > 0
     var locName = $("#comfortLevelButton").text(); // can check using != '' --> don't need to check because will be valid if floorNum is
     var comfortLevel = $("#locationNameButton").text(); // can check using != ''
     console.log(floorNum, locName, comfortLevel);
 
     if ((floorNum > 0) && (comfortLevel != '') && (locName != '')) {
-        newUserEntry(piwebapi, locName, comfortLevel);
+        newUserEntry(piwebapi, locName, comfortLevel).then(function () {
+            $("#successModal").modal();
+        }, function (error) {
+            $("#errorModal").modal();
+            console.log(error);
+        });
+
+    } else {
+        $("#errorModal").modal();
     }
 }
+
+
+function resetButtonText() {
+    $("#floorNumberButton").text("Floor Number");
+    $("#comfortLevelButton").text("Comfort Level");
+    $(".square").css("backgroundColor", "");
+}
+
 
 function getLocAverage(piwebapi) {
     var locName = document.getElementById("locationName").value; // can check using != '' --> don't need to check because will be valid if floorNum is

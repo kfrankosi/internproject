@@ -110,11 +110,10 @@ img {
     height: 77vh;
     position: relative;
     padding: 1%;
-    z-index: -10;
 }
 
 .square {
-    border: dashed;
+    /* border: dashed; */
     border-color: blue;
     position: fixed;
     /* opacity: 0.6; */
@@ -262,8 +261,8 @@ label {
 }
 
 #section14 {
-    width: 5vw;
-    left: 44vw;
+    width: 6vw;
+    left: 45vw;
 }
 
 #section13 {

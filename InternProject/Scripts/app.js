@@ -25,6 +25,20 @@ app.controller("mainCtrl", function ($scope, piwebapi) {
         $("#comfortLevelButton").text($(this).text());
     });
 
+
+    $('.modal').on('hidden.bs.modal', function () {
+        try {
+            resetButtonText();
+        } catch (exception) {
+            console.log("not clickable part of the map");
+        }
+    });
+
+    $('img').click(function () {
+        $("#invalidClickModal").modal();
+        console.log("clicked img");
+    });
+
     // $('.dropdown-menu a').click(function (e) {
     //     // console.log($('#selected').text(e.currentTarget.innerText));
     //     $(this).text(e.currentTarget.innerText);
@@ -111,7 +125,15 @@ app.controller("mainCtrl", function ($scope, piwebapi) {
             });
         }
 
-        $scope.clickLocation = function (locNum) {
+        $scope.clickLocation = function (locNum, self) {
+            currentSquare = self.currentTarget;
+            var allClasses = currentSquare.className.split(' ');
+            var elements = (document.getElementsByClassName(allClasses[allClasses.length - 1]));
+
+            for (var i = 0; i < elements.length; i++) {
+                elements[i].style.backgroundColor = 'red';
+            }
+
             // if (document.getElementById("floorNumber").value == "? undefined:undefined ?") {
             $("#myModal").modal();
             // } else {
@@ -144,14 +166,7 @@ app.controller("mainCtrl", function ($scope, piwebapi) {
 
 // populate floor dropdown menu w all floors
 var list = document.getElementById("floorNumber");
-console.log(list);
 for (var i = 1; i <= 6; i++) {
-    // var opt = document.createElement('li');
-    // opt.classList.add("dropdown-item");
-    // opt.value = i;
-    // opt.innerHTML = i;
-    // select.appendChild(opt);
-
     var li = document.createElement("li");
     var link = document.createElement("a");
     var text = document.createTextNode(i);
