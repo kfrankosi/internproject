@@ -49,7 +49,7 @@
                     </select> -->
 
 
-                    <div class="dropdown" style="visibility:hidden; position:fixed">
+                    <div class="dropdown">
                         <button class="btn btn-secondary dropdown-toggle" type="button" id="floorNumberButton" data-toggle="dropdown" aria-haspopup="true"
                             aria-expanded="false">
                             Floor Number
@@ -68,11 +68,11 @@
                     </div>
 
                     <div class="dropdown">
-                        <button id="comfortLevel" class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown"
+                        <button id="comfortLevelButton" class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown"
                             aria-haspopup="true" aria-expanded="false">
                             Comfort Level
                         </button>
-                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" id="comfortLevel">
                             <li>
                                 <a class="dropdown-item" href="">Cold</a>
                             </li>
@@ -85,7 +85,7 @@
                         </div>
                     </div>
 
-                    <div class="dropdown">
+                    <div class="dropdown" style="visibility: hidden">
                         <button id="locationNameButton" class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown"
                             aria-haspopup="true" aria-expanded="false">
                             Location
@@ -98,7 +98,7 @@
 
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="changeFloor()">Select</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="submitResponse()">Select</button>
                 </div>
             </div>
 

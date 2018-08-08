@@ -28,7 +28,6 @@ function makePoint(piwebapi, tagname, value) {
                 resolve(response);
             }, function (error) {
                 reject(error);
-                console.log(error);
             });
         });
     });
@@ -36,6 +35,7 @@ function makePoint(piwebapi, tagname, value) {
 
 
 function newUserEntry(piwebapi, locName, comfortLevel) {
+    console.log("new user entry");
     switch (comfortLevel) {
         case "Cold":
             comfortLevel = -1;
@@ -56,10 +56,8 @@ function newUserEntry(piwebapi, locName, comfortLevel) {
     makePoint(piwebapi, "Status", "Gathering Info")
         .then(function () {
             getUser(piwebapi).then(function (user) {
-                console.log(user);
                 makePoint(piwebapi, "ID", user);
             });
-
             makePoint(piwebapi, "Room", locName);
             makePoint(piwebapi, "ComfortValue", comfortLevel); // need to convert to int value
         })
@@ -87,11 +85,12 @@ function getUser(piwebapi) {
 }
 
 function submitResponse(piwebapi) {
-    var floorNum = document.getElementById("floorNumber").value; // can check using > 0
-    // var locName = document.getElementById("locationName").value; // can check using != '' --> don't need to check because will be valid if floorNum is
-    var comfortLevel = document.getElementById("comfortLevel").value; // can check using != ''
+    // var floorNum = document.getElementById("floorNumber").value; // can check using > 0
+    var locName = $("#comfortLevelButton").text(); // can check using != '' --> don't need to check because will be valid if floorNum is
+    var comfortLevel = $("#locationNameButton").text(); // can check using != ''
+    console.log(floorNum, locName, comfortLevel);
 
-    if ((floorNum > 0) && (comfortLevel != '')) {
+    if ((floorNum > 0) && (comfortLevel != '') && (locName != '')) {
         newUserEntry(piwebapi, locName, comfortLevel);
     }
 }

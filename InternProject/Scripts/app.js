@@ -13,15 +13,22 @@ app.controller("mainCtrl", function ($scope, piwebapi) {
     /*
     Listeners for dropdown menus
     */
-    $('#floorNumber').click(function (e) {
-        console.log(e)
-        console.log($("#floorNumber"));
-        $scope.changeFloor();
+    $('#floorNumber a').click(function (e) {
+        console.log("floor num", floorNum = $(this).text());
+        $("#floorNumberButton").text(floorNum);
+        $scope.changeFloor(floorNum);
+        // $scope.changeFloor();
     });
 
-    $('.dropdown-menu a').click(function () {
-        $('#selected').text($(this).text());
+
+    $('#comfortLevel a').click(function (e) {
+        $("#comfortLevelButton").text($(this).text());
     });
+
+    // $('.dropdown-menu a').click(function (e) {
+    //     // console.log($('#selected').text(e.currentTarget.innerText));
+    //     $(this).text(e.currentTarget.innerText);
+    // });
 
     getVars(piwebapi).then(function (response) {
         webId = response.data.WebId;
@@ -109,7 +116,7 @@ app.controller("mainCtrl", function ($scope, piwebapi) {
             $("#myModal").modal();
             // } else {
             console.log("changing loc ", locNum);
-            $("#floorNumberButton").text(locNum);
+            $("#locationNameButton").text(locNum);
             $scope.changeFloor(locNum);
             floorNum = locNum;
             // }
@@ -129,6 +136,7 @@ app.controller("mainCtrl", function ($scope, piwebapi) {
     });
 
     $scope.submitResponse = function () {
+        console.log('scope submit response')
         submitResponse(piwebapi);
     }
 
