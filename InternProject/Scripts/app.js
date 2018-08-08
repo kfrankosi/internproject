@@ -37,9 +37,10 @@ app.controller("mainCtrl", function ($scope, piwebapi) {
         // gets the average comfort value for the selected location
         $scope.getAvg = function () {
             var locationName = document.getElementById("locationName").value;
-            eventFrameQuery(piwebapi, "AnalysisName:\"new status\" Template:\"New Entry\" |Status:=\"Ready\" |Room:=\"" + locationName,  "No vote entries")
+            eventFrameQuery(piwebapi, "AnalysisName:\"new status\" Template:\"New Entry\" |Status:=\"Ready\" |Room:=\"" + locationName, "No vote entries")
                 .then(
                     function (response) {
+                        console.log(response.Links);
                         var allComfortVals = []; var avg = 0; var counter = 0;
                         response.forEach(function (obj) {
                             if (obj.Name == 'ComfortValue') {

@@ -13,7 +13,7 @@ function getVars(piwebapi) {
 
 function getAllElements(piwebapi) {
     return new Promise(function (resolve, reject) {
-        resolve(piwebapi.assetDatabase.getElements(dbId, null, null, null, null, null, true, [],null,null,null,"VAVCO"));
+        resolve(piwebapi.assetDatabase.getElements(dbId, null, null, null, null, null, true, [], null, null, null, "VAVCO"));
     });
 }
 
@@ -133,9 +133,22 @@ function getLocAverage(piwebapi) {
 
 // very slow
 function eventFrameQuery(piwebapi, search, errorMsg) {
+    console.log("event frame query");
     var relevantEntries = [];
+
+    // var eventFramesReq = new PIWebApiClient.PIRequest();
+    // var streamValuesReq = new PIWebApiClient.PIRequest();
+
+    // eventFramesReq.setMethod('GET');
+    // streamValuesReq.setMethod('GET');
+
+    // eventFramesReq.setResource(baseUrl+"eventframes/search");
+    // streamValuesReq.setResource(baseUrl+"eventframes/search");
+
+    var counter = 0;
+    //working non batch request
     return new Promise(function (resolve, reject) {
-        // console.log(search);
+        var pirequests = {};
         piwebapi.eventFrame.getEventFramesQuery(dbId, null, search).then(function (response) {
             var allFrames = response.data.Items; //link, then values -- then another get on that?
             if ((allFrames).length == 0) {
@@ -144,20 +157,23 @@ function eventFrameQuery(piwebapi, search, errorMsg) {
             var allFramesProcessed = 1;
             allFrames.forEach(function (element) {
                 var valueFramesProcessed = 1;
-                piwebapi.streamSet.getValues(element.WebId).then(function (response) {
-                    response.data.Items.forEach(function (element) {
-                        //iterate through all the attributes in each event frame
-                        valueFramesProcessed++;
-                        relevantEntries.push(element);
-                        // console.log(valueFramesProcessed, allFramesProcessed);
-                        if ((allFramesProcessed >= allFrames.length) && (valueFramesProcessed >= response.data.Items.length))
-                            resolve(relevantEntries);
-                    });
-                    allFramesProcessed++;
-                }, function (error) {
-                    reject(error);
-                });
+
+                pirequests[counter++] = {
+                    "Method": "GET",
+                    "Resource": baseUrl + "streamsets/" + element.WebId + "/value",
+                    "Headers": {
+                        "Accept": "application/json, text/plain, */*",
+                        "X-Requested-With": "PIWebApiWrapper"
+                    }
+                };
             });
+            
+            piwebapi.batch.execute(pirequests).then(function (response) {
+                console.log(response);
+            }, function (error) {
+                console.log(error);
+            });
+           
         }, function (error) {
             reject(error);
         });
