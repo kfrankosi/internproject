@@ -9,15 +9,13 @@ app.run(function (piwebapi) {
 
 
 app.controller("mainCtrl", function ($scope, piwebapi) {
-
     /*
     Listeners for dropdown menus
     */
     $('#floorNumber a').click(function (e) {
-        console.log("floor num", floorNum = $(this).text());
+        console.log("floor num", (floorNum = $(this).text()));
         $("#floorNumberButton").text(floorNum);
         $scope.changeFloor(floorNum);
-        // $scope.changeFloor();
     });
 
 
@@ -29,6 +27,7 @@ app.controller("mainCtrl", function ($scope, piwebapi) {
     $('.modal').on('hidden.bs.modal', function () {
         try {
             resetButtonText();
+            addTempColors(piwebapi);
         } catch (exception) {
             console.log("not clickable part of the map");
         }
@@ -36,7 +35,7 @@ app.controller("mainCtrl", function ($scope, piwebapi) {
 
     $('img').click(function () {
         $("#invalidClickModal").modal();
-        console.log("clicked img");
+        addTempColors(piwebapi);
     });
 
     // $('.dropdown-menu a').click(function (e) {
@@ -48,11 +47,7 @@ app.controller("mainCtrl", function ($scope, piwebapi) {
         webId = response.data.WebId;
         $scope.onFloor = true;
 
-        piwebapi.home.get().then(function (response) {
-            // console.log(response.data);
-        }, function (error) {
-            console.log(error.data);
-        });
+        addTempColors(piwebapi);
 
         // returns all the user entries for the loggedin user (for all locations)
         $scope.getUserEntries = function () {
@@ -69,79 +64,19 @@ app.controller("mainCtrl", function ($scope, piwebapi) {
             });
         }
 
-        // gets the average comfort value for the selected location
-        $scope.getAvg = function () {
-            var avg = 0; var allComfortVals = [];
-            var locationName = document.getElementById("locationName").value;
-            eventFrameQuery(piwebapi, "AnalysisName:\"new status\" Template:\"New Entry\" |Status:=\"Ready\" |Room:=\"" + locationName, "No vote entries")
-                .then(
-                    function (response, returnCalcAvg = function () {
-                        console.log("average val: ", avg / allComfortVals.length);
-                    }) {
-                        console.log(response);
-                        for (var obj in response) {
-                            var element = response[obj].Content.Items[2];
-                            allComfortVals.push(element);
-                            avg += element.Value.Value;
-                        }
-                        returnCalcAvg();
-                    }, function (error) {
-                        alert(error);
-                    });
-
-        }
-
         $scope.changeFloor = function () {
-            console.log("changing floor");
             /* Fill dropdown menu with different vavcos -- later need to make them more user friendly
-            Each corresponds to a thermostat */
-
-            // returns all elements in the db -- need to filter out VAVCOs
-            getAllElements(piwebapi).then(function (response) {
-                console.log(response);
-                // have another list to choose floor num and then generate list from that
-                // var floorNum = document.getElementById("floorNumberButton");
-                // var select = document.getElementById("locationName");
-                $("#locationName").empty();
-                var list = document.getElementById("locationName");
-                (response.data.Items).forEach(function (element) {
-                    // console.log(element.Name, floorNum)
-                    if (element.Name.indexOf("VAVCO " + floorNum) > -1) {
-                        var li = document.createElement("li");
-                        var link = document.createElement("a");
-                        var text = document.createTextNode(element.Name.substring(element.Name.indexOf("-") + 1));
-                        link.appendChild(text);
-                        link.href = "#";
-                        li.appendChild(link);
-                        list.appendChild(li);
-                        // var opt = document.createElement('a');
-                        // opt.value = element.Name;
-                        // opt.innerHTML = element.Name.substring(element.Name.indexOf("-") + 1);//,element.Name.indexOf("-"));
-                        // opt.appendChild(opt);
-                    }
-                });
-            }, function (error) {
-                console.log(error.data);
-            });
+                Each corresponds to a thermostat */
+            populateColors(piwebapi); // this will change the value when called
         }
 
+        // locNum is the VAVCO number
         $scope.clickLocation = function (locNum, self) {
             currentSquare = self.currentTarget;
-            var allClasses = currentSquare.className.split(' ');
-            var elements = (document.getElementsByClassName(allClasses[allClasses.length - 1]));
-
-            for (var i = 0; i < elements.length; i++) {
-                elements[i].style.backgroundColor = 'red';
-            }
-
-            // if (document.getElementById("floorNumber").value == "? undefined:undefined ?") {
             $("#myModal").modal();
-            // } else {
-            console.log("changing loc ", locNum);
-            $("#locationNameButton").text(locNum);
-            $scope.changeFloor(locNum);
-            floorNum = locNum;
-            // }
+            console.log('loc number ', locNum);
+            $("#locationNameButton").text(locNum); // should just be the number -- manipulated later to add 'VAVCO'
+            addTempColors(piwebapi);
         }
 
         // piwebapi.dataServer.getByPath("\\\\PIKFRANK").then(function (serverResponse) {
@@ -159,8 +94,29 @@ app.controller("mainCtrl", function ($scope, piwebapi) {
 
     $scope.submitResponse = function () {
         console.log('scope submit response')
-        submitResponse(piwebapi);
+        submitResponse(piwebapi)
+            .then(function (response) {
+                var loc = parseInt(response.substring(response.indexOf('to ') + ("to VAVCO x-").length));
+                var currElemClass = document.getElementsByClassName(loc);
+
+                getLocAverage(piwebapi, response.substring(response.indexOf('to ') + ('to ').length)).then(
+                    function (response) {
+                        console.log('new avg', response);
+                        colorMap.set(currElemClass, response);
+                        colorMapSection(currElemClass, response);
+                    }, function () {
+                        colorMap.set(currElemClass, response);
+                        colorMapSection(currElemClass, response);
+                    }
+                )
+                // first need to recalclate average
+
+            });
+
+        // Update average value for that location -- potential issue since it takes a minute to submit?
     }
+
+
 
 });
 
@@ -175,3 +131,4 @@ for (var i = 1; i <= 6; i++) {
     li.appendChild(link);
     list.appendChild(li);
 }
+
