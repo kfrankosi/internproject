@@ -12,15 +12,16 @@ function getVars(piwebapi) {
 
 function getAllElements(piwebapi) {
     return new Promise(function (resolve, reject) {
-        console.log(piwebapi)
         piwebapi.assetDatabase.getElements(dbId, null, null, null, null, null, true, [], null, null, null, "VAVCO").then(
             function (response) {
                 resolve(response);
             }, function (error) {
                 reject(error);
             });
+
     });
 }
+
 
 
 function makePoint(piwebapi, tagname, value) {
@@ -213,7 +214,6 @@ function addTempColors(piwebapi) {
         // Initial fill of the colors on map
         // if (updatedSquare == 'init') {
         // I think this is looping all the way through and not doing the loc averages one by one -- only getting last
-        populateColors(19, piwebapi);
         populateColorsHelper(1, 19, piwebapi);
     }
     // }
@@ -252,6 +252,10 @@ function populateColorsHelper(i, numRooms, piwebapi) {
         // console.log(error);
     });
 
+}
+
+function getTempAvgByLocName(locNum) {
+    return colorMap.get(document.getElementsByClassName(locNum));
 }
 
 function changeFloorAndCalculateNumRooms(piwebapi) {

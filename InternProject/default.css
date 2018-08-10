@@ -127,11 +127,11 @@ img {
 
 .square_top {
     top: 8vh;
-    height: 22.8vh;
+    height: 22.1vh;
 }
 
 .square_middle {
-    height: 26.8vh;
+    height: 26.1vh;
     top: 30vh;
     width: 2vw;
 }
@@ -148,14 +148,14 @@ img {
 }
 
 .square2 {
-    width: 29vw;
+    width: 28vw;
     left: 16vw;
     /* background-color: yellow; */
 }
 
 #squareRoom {
-    width: 6vw;
-    left: 45vw;
+    width: 7vw;
+    left: 44vw;
     /* background-color: blue; */
 }
 

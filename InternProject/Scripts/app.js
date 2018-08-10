@@ -4,7 +4,6 @@ var app = angular.module(ngAppName, ['ngPIWebApi']);
 
 app.run(function (piwebapi) {
     piwebapi.ConfigureInstance(baseUrl, true);
-    // Set to true to enable kerberos -- still works when the configuration auth method is not kerberos...
 });
 
 
@@ -41,6 +40,7 @@ app.controller("mainCtrl", function ($scope, piwebapi) {
         addTempColors(piwebapi);
     });
 
+    // generic listener -- not working
     // $('.dropdown-menu a').click(function (e) {
     //     // console.log($('#selected').text(e.currentTarget.innerText));
     //     $(this).text(e.currentTarget.innerText);
@@ -49,7 +49,6 @@ app.controller("mainCtrl", function ($scope, piwebapi) {
     getVars(piwebapi).then(function (response) {
         webId = response.data.WebId;
         $scope.onFloor = true;
-
         addTempColors(piwebapi);
 
         // returns all the user entries for the loggedin user (for all locations)
@@ -59,8 +58,7 @@ app.controller("mainCtrl", function ($scope, piwebapi) {
             getUser(piwebapi).then(function () {
                 eventFrameQuery(piwebapi, "AnalysisName:\"new status\" Template:\"New Entry\" |Status:=\"Ready\" |ID:=\"*" + user.substring(user.indexOf("\\") + 1) + '\"',
                     "No user entries").then(
-                        function (response) {
-                            // console.log(response);
+                        function () {
                         }, function (error) {
                             console.log(error);
                         });
@@ -78,6 +76,7 @@ app.controller("mainCtrl", function ($scope, piwebapi) {
             currentSquare = self.currentTarget;
             $("#myModal").modal();
             console.log('loc number ', locNum);
+            console.log(getTempAvgByLocName(locNum));
             $("#locationNameButton").text(locNum); // should just be the number -- manipulated later to add 'VAVCO'
             addTempColors(piwebapi);
         }
@@ -115,12 +114,7 @@ app.controller("mainCtrl", function ($scope, piwebapi) {
                 // first need to recalclate average
 
             });
-
-        // Update average value for that location -- potential issue since it takes a minute to submit?
     }
-
-
-
 });
 
 // populate floor dropdown menu w all floors
