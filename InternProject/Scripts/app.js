@@ -96,16 +96,17 @@ app.controller("mainCtrl", function ($scope, piwebapi) {
                 var loc = parseInt(response.substring(response.indexOf('to ') + ("to VAVCO x-").length));
                 var currElemClass = document.getElementsByClassName(loc);
 
-                getLocAverage(piwebapi, response.substring(response.indexOf('to ') + ('to ').length)).then(
-                    function (response) {
-                        console.log('new avg', response);
-                        colorMap.set(currElemClass, response);
-                        colorMapSection(currElemClass, response);
-                    }, function () {
-                        colorMap.set(currElemClass, response);
-                        colorMapSection(currElemClass, response);
-                    }
-                )
+                getLocAverage(piwebapi, response.substring(response.indexOf('to ') + ('to ').length))
+                    .then(
+                        function (response) {
+                            console.log('new avg', response);
+                            colorMap.set(currElemClass, response);
+                            colorMapSection(currElemClass, response);
+                        }, function () {
+                            colorMap.set(currElemClass, response);
+                            colorMapSection(currElemClass, response);
+                        }
+                    )
                 // first need to recalclate average
 
             });
