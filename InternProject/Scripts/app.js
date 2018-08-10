@@ -9,6 +9,8 @@ app.run(function (piwebapi) {
 
 
 app.controller("mainCtrl", function ($scope, piwebapi) {
+    $scope.floorNumber = floorNum;
+
     /*
     Listeners for dropdown menus
     */
@@ -16,6 +18,7 @@ app.controller("mainCtrl", function ($scope, piwebapi) {
         console.log("floor num", (floorNum = $(this).text()));
         $("#floorNumberButton").text(floorNum);
         $scope.changeFloor(floorNum);
+        $scope.floorNumber = floorNum;
     });
 
 

@@ -126,7 +126,7 @@ function submitResponse(piwebapi) {
 
 function resetButtonText() {
     console.log('Resetting button texts');
-    $("#floorNumberButton").text("Floor Number");
+    $("#floorNumberButton").text(floorNum);
     $("#comfortLevelButton").text("Comfort Level");
 }
 
@@ -148,7 +148,7 @@ function getLocAverage(piwebapi, location) {
                     i++;
                 }
                 avg = avg / (i - 1);
-                resolve(isNaN(avg) ? 0 : avg);
+                resolve((isNaN(avg) || !isFinite(avg)) ? 0 : avg);
             }, function (error) {
                 reject(error);
             });
@@ -195,6 +195,9 @@ function colorMapSection(allClassSquares) {
     for (var i = 0; i < allClassSquares.length; i++) {
         allClassSquares[i].style.backgroundColor = (opacity > 0) ? 'red' : 'blue';
         allClassSquares[i].style.opacity = Math.abs((opacity == undefined) ? 0.5 : opacity);
+
+        // keep all opacities somewhat transparent
+        allClassSquares[i].style.opacity *= 0.7;
     }
 }
 
@@ -202,7 +205,6 @@ function colorMapSection(allClassSquares) {
 function addTempColors(piwebapi) {
     // Once the averages have already been calculated -- no need to make new api request
     if ((colorMap.size > 0)) {
-        console.log('reloading existing values for colors');
         // iterates through entire map to fill in all colors
         colorMap.forEach(function (value, key) {
             colorMapSection(key);

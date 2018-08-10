@@ -1,4 +1,8 @@
-/* Forms */
+h1 {
+    text-align: right;
+    padding-right: 3%;
+    padding-top: 2%;
+}
 
 label {
     display: block;
