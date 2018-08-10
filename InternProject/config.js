@@ -1,7 +1,10 @@
 let ngAppName = "WebApiApp";
-let serverId = "F1DSPriJQMfiM0mIGCBz973bBAUElLRlJBTks";
+let serverId = "F1DSPriJQMfiM0mIGCBz973bBAUElLRlJBTks"; // hardcoded -- returned in location header, couldn't figure out how to access it
 var dbId, webId, user, locName, floorNum = 3, currentSquare, colorMap = new Map();
+
+
 // returns a promise that holds the dataserver Object -- can manipulate it in other areas of code
+// call to initialzie vars
 function getVars(piwebapi) {
     return new Promise(function (resolve, reject) {
         // first get all variables to be used throughout
@@ -10,6 +13,7 @@ function getVars(piwebapi) {
     });
 }
 
+// returns all elements in the database
 function getAllElements(piwebapi) {
     return new Promise(function (resolve, reject) {
         piwebapi.assetDatabase.getElements(dbId, null, null, null, null, null, true, [], null, null, null, "VAVCO").then(
@@ -22,8 +26,7 @@ function getAllElements(piwebapi) {
     });
 }
 
-
-
+// creates a new pi point via post request
 function makePoint(piwebapi, tagname, value) {
     var val = new PIWebApiClient.PITimedValue()
     val.Timestamp = ("*");
@@ -39,7 +42,7 @@ function makePoint(piwebapi, tagname, value) {
     });
 }
 
-
+// posts multiple points that make up a user entry
 function newUserEntry(piwebapi, comfortLevel, locName) {
     console.log("locname, comfort: ", locName, comfortLevel);
     switch (comfortLevel) {
@@ -81,6 +84,7 @@ function newUserEntry(piwebapi, comfortLevel, locName) {
     });
 }
 
+// returns the current user
 function getUser(piwebapi) {
     if (user != undefined) {
         return new Promise(function (resolve) {
@@ -97,6 +101,7 @@ function getUser(piwebapi) {
     }
 }
 
+// posts a vote
 function submitResponse(piwebapi) {
     var floorNum = $("#floorNumberButton").text(); // can check using > 0
     var comfortLevel = $("#comfortLevelButton").text(); // can check using != '' --> don't need to check because will be valid if floorNum is
@@ -124,14 +129,14 @@ function submitResponse(piwebapi) {
 
 }
 
-
+// resets the buttons to not be the last response
 function resetButtonText() {
     console.log('Resetting button texts');
     $("#floorNumberButton").text(floorNum);
     $("#comfortLevelButton").text("Comfort Level");
 }
 
-
+// returns average temp response for a given location -- floor number is taken from env variable
 function getLocAverage(piwebapi, location) {
     // I dont remember why I duplicated this with a local variable
     var locName = (location == '') ? document.getElementById("locationName").value : location; // can check using != '' --> don't need to check because will be valid if floorNum is
@@ -157,7 +162,7 @@ function getLocAverage(piwebapi, location) {
 }
 
 
-// very slow
+// query for event frame -- part of it is in a batch request, should do the outer 'getEventFramesQuery' as the parent in the batch request
 function eventFrameQuery(piwebapi, search, errorMsg) {
     var counter = 0;
     return new Promise(function (resolve, reject) {
@@ -213,17 +218,13 @@ function addTempColors(piwebapi) {
         });
     } else {
         // Initial fill of the colors on map
-        // if (updatedSquare == 'init') {
-        // I think this is looping all the way through and not doing the loc averages one by one -- only getting last
         populateColorsHelper(1, 19, piwebapi);
     }
-    // }
-    // } 
-    // else {
 
-    // }
 }
 
+
+// calls recursive helper function
 function populateColors(piwebapi) {
     changeFloorAndCalculateNumRooms(piwebapi).then(
         function (numRooms) {
@@ -255,10 +256,12 @@ function populateColorsHelper(i, numRooms, piwebapi) {
 
 }
 
+// gets the avg temp at this loc from the hashmap -- possibly integrate into other avg loc method?
 function getTempAvgByLocName(locNum) {
     return colorMap.get(document.getElementsByClassName(locNum));
 }
 
+// changes the floor the user is voting on and recolors the map accordingly
 function changeFloorAndCalculateNumRooms(piwebapi) {
     return new Promise(function (resolve) {
         // returns all elements in the db -- need to filter out VAVCOs
@@ -281,10 +284,6 @@ function changeFloorAndCalculateNumRooms(piwebapi) {
                     link.href = "#";
                     li.appendChild(link);
                     list.appendChild(li);
-                    // var opt = document.createElement('a');
-                    // opt.value = element.Name;
-                    // opt.innerHTML = element.Name.substring(element.Name.indexOf("-") + 1);//,element.Name.indexOf("-"));
-                    // opt.appendChild(opt);
                 }
             });
 
@@ -295,6 +294,7 @@ function changeFloorAndCalculateNumRooms(piwebapi) {
     });
 }
 
+// performed when the user clicks on a part of the map
 function clickLocation(piwebapi, locNum, self) {
     try {
         currentSquare = self.currentTarget;

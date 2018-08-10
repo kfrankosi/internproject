@@ -2,6 +2,7 @@
 let baseUrl = "https://pikfrank.osisoft.int/piwebapi";
 var app = angular.module(ngAppName, ['ngPIWebApi']);
 
+// starts the app
 app.run(function (piwebapi) {
     piwebapi.ConfigureInstance(baseUrl, true);
 });
@@ -20,12 +21,12 @@ app.controller("mainCtrl", function ($scope, piwebapi) {
         $scope.floorNumber = floorNum;
     });
 
-
+    // listener for comfort
     $('#comfortLevel a').click(function (e) {
         $("#comfortLevelButton").text($(this).text());
     });
 
-
+    // when modal goes away
     $('.modal').on('hidden.bs.modal', function () {
         try {
             resetButtonText();
@@ -35,6 +36,7 @@ app.controller("mainCtrl", function ($scope, piwebapi) {
         }
     });
 
+    // when clicking on invalid part of the map
     $('img').click(function () {
         $("#invalidClickModal").modal();
         addTempColors(piwebapi);
@@ -46,6 +48,7 @@ app.controller("mainCtrl", function ($scope, piwebapi) {
     //     $(this).text(e.currentTarget.innerText);
     // });
 
+    // initializes vars
     getVars(piwebapi).then(function (response) {
         webId = response.data.WebId;
         $scope.onFloor = true;
