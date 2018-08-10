@@ -182,10 +182,10 @@
         </div> -->
         <!-- Insert floor layout -->
         <div id="floorplan">
-            <img src="Floorplan.jpg" style="top:5vh">
+            <img id="floorplanImg" src="Floorplan.jpg" style="top:5vh" onclick="clickLocation(4)">
         </div>
         <div id="floorplan_child">
-            <div id="" class="square1 room square square_top 4" ng-click="clickLocation(4, $event)">
+            <!-- <div id="" class="square1 room square square_top 4" ng-click="clickLocation(4, $event)">
                 <div class="vavLabel">4</div>
             </div>
             <div id="" class="square2 room square square_top 5" ng-click="clickLocation(5, $event)">
@@ -207,7 +207,6 @@
             <div id="" class="square1 room square square_middle middleExtend 4" ng-click="clickLocation(4, $event)">
                 <div class="vavLabel">4</div>
             </div>
-            <!-- <div id="stairs" class="square2 room square square_middle" > ></div> -->
             <div id="conf" class="square4 room square square_middle 18" ng-click="clickLocation(18, $event)">
                 <div class="vavLabel">18</div>
             </div>
@@ -241,14 +240,10 @@
             </div>
             <div id=" " class="square6 room square square_bottom 1" ng-click="clickLocation(1, $event)">
                 <div class="vavLabel ">1</div>
-            </div>
-
+            </div> -->
         </div>
     </div>
 
-    <div ng-show="showMap==true " id="map ">
-        <!-- <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD3tl-i_Mg8Z7uEIT82ElNO7vT1mbTx6hI&callback=renderMap " defer></script> -->
-    </div>
 
     <!--The div below will appear only if $scope.requestMode == true-->
     <!-- Set to == true to see boxes from initial web app -->

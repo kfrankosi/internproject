@@ -193,10 +193,11 @@ function eventFrameQuery(piwebapi, search, errorMsg) {
 // Takes in array of elements (all with the same section number), color, and opacity --> applies those transformations on those elements
 function colorMapSection(allClassSquares) {
     var opacity = colorMap.get(allClassSquares);
+    opacity = (opacity > 1) ? 1 : ((opacity < -1) ? -1: opacity);
     for (var i = 0; i < allClassSquares.length; i++) {
         allClassSquares[i].style.backgroundColor = (opacity > 0) ? 'red' : 'blue';
         allClassSquares[i].style.opacity = Math.abs((opacity == undefined) ? 0.5 : opacity);
-
+        allClassSquares[i].style.boxShadow = '20px 20px 50px 0 white inset, -20px -20px 50px 0 white inset';
         // keep all opacities somewhat transparent
         allClassSquares[i].style.opacity *= 0.7;
     }
@@ -292,4 +293,13 @@ function changeFloorAndCalculateNumRooms(piwebapi) {
     }, function (error) {
         console.log(error.data);
     });
+}
+
+function clickLocation(piwebapi, locNum, self) {
+    currentSquare = self.currentTarget;
+    $("#myModal").modal();
+    console.log('loc number ', locNum);
+    console.log(getTempAvgByLocName(locNum));
+    $("#locationNameButton").text(locNum); // should just be the number -- manipulated later to add 'VAVCO'
+    addTempColors(piwebapi);
 }

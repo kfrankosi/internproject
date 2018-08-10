@@ -73,12 +73,7 @@ app.controller("mainCtrl", function ($scope, piwebapi) {
 
         // locNum is the VAVCO number
         $scope.clickLocation = function (locNum, self) {
-            currentSquare = self.currentTarget;
-            $("#myModal").modal();
-            console.log('loc number ', locNum);
-            console.log(getTempAvgByLocName(locNum));
-            $("#locationNameButton").text(locNum); // should just be the number -- manipulated later to add 'VAVCO'
-            addTempColors(piwebapi);
+            clickLocation(piwebapi, locNum, self);
         }
 
         // piwebapi.dataServer.getByPath("\\\\PIKFRANK").then(function (serverResponse) {
@@ -129,3 +124,47 @@ for (var i = 1; i <= 6; i++) {
     list.appendChild(li);
 }
 
+// Populate map with each room block
+var map = document.getElementById("floorplan_child");
+var leftPrev, runningRowWidth = 0, i = 1, counter = 0, mapWidth = 90; // mapwidth in vw hardcoded from css
+var squarePos = ['square_top', 'square_middle', 'square_bottom'];
+var widths = [
+    11, 29, 6, 19, 10, 11,
+    18, -31, 8, -12, 6, 11,
+    11, 11, 17, 5, 7, 14, 10, 11
+];
+var addLocation = [
+    4, 5, 17, 6, 7, 1,
+    4, '', 18, '', 9, 1,
+    4, 15, 3, 14, 13, 2, 12, 1
+];
+//initial left padding
+// while (width < mapWidth) {
+for (var j = 0; j < squarePos.length; j++) {
+    leftPrev = 4;
+    runningRowWidth = 0;
+    while ((runningRowWidth + 4) < mapWidth) {
+        if (widths[counter] < 0) {
+            // dead area in map
+            widths[counter] = Math.abs(widths[counter]);
+            runningRowWidth += widths[counter];
+            leftPrev += widths[counter];
+            counter++;
+        }
+        var div = document.createElement("div");
+        $(div).attr('ng-click', 'clickLocation(' + addLocation[counter] + ', $event)');
+        div.classList.add(addLocation[counter]);
+        div.classList.add('square');
+        div.classList.add(squarePos[j]);
+        div.style.width = widths[counter] + 'vw';
+        runningRowWidth += widths[counter];
+
+        div.style.left = leftPrev + 'vw';
+        leftPrev += widths[counter];
+
+        // div.appendChild(text);
+        map.appendChild(div);
+        counter++;
+        // break;
+    }
+}
